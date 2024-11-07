@@ -15,6 +15,12 @@ if [[ ! -d "$TOOLKIT_ROOT/bin" ]] || [[ ! -d "$TOOLKIT_ROOT/config" ]]; then
   exit 1
 fi
 
+#### Create Directories ####
+mkdir -p "$TOOLKIT_ROOT/data/mongo"
+mkdir -p "$TOOLKIT_ROOT/data/git-bridge"
+mkdir -p "$TOOLKIT_ROOT/data/overleaf"
+mkdir -p "$TOOLKIT_ROOT/data/redis"
+
 function usage() {
   echo "Usage: bin/init [OPTION]"
   echo ""
