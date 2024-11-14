@@ -1,0 +1,41 @@
+{
+  "name": "docker-electron-app",
+  "version": "1.0.0",
+  "description": "An Electron app that controls Docker containers using a shell script",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-builder",
+     "build": "electron-builder"
+  },
+  "dependencies": {
+
+
+  },
+  "devDependencies": {
+        "electron-builder": "^24.3.0",
+            "electron": "^26.2.0"
+  },
+  "build": {
+    "appId": "com.example.dockerapp",
+    "productName": "Docker-Electron App",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+"**/*", 
+      "!dist", 
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/*.map"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
