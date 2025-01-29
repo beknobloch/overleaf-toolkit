@@ -18,7 +18,7 @@
   },
   "build": {
     "appId": "com.example.dockerapp",
-    "productName": "Docker-Electron App",
+    "productName": "Underbranch",
     "directories": {
       "output": "dist"
     },
@@ -29,7 +29,9 @@
       "!**/*.map"
     ],
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+      
     },
     "win": {
       "target": "nsis"
