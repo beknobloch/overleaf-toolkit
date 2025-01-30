@@ -1,0 +1,25 @@
+[Unit]
+Description=Overleaf Community Edition
+
+[Service]
+User=root
+WorkingDirectory=/opt/overleaf-toolkit
+ExecStart=/opt/overleaf-toolkit/bin/up
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+[Unit]
+Description=Overleaf Community Edition
+
+[Service]
+User=root
+WorkingDirectory=/opt/overleaf-toolkit
+ExecStart=/opt/overleaf-toolkit/bin/up
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

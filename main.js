@@ -9,6 +9,7 @@ let mainWindow;
 const startScriptPath = path.join(__dirname, 'bin/up');
 const stopScriptPath = path.join(__dirname, 'bin/stop');
 
+
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers() {
   return new Promise((resolve, reject) => {
@@ -58,6 +59,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: __dirname + '/assets/icon',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -66,21 +68,21 @@ function createWindow() {
   });
 
   // Load the web app at http://localhost:3000/launchpad
-  mainWindow.loadURL('http://localhost/login');
+  mainWindow.loadURL('http://localhost/launchpad');
 }
 
 // Electron app events
 app.on('ready', () => {
-  checkDockerInstalled()
-    .then(() => startDockerContainers())
-    .then(() => {
-      createWindow(); // Create the window only after Docker containers are started
-      mainWindow.webContents.send('docker-status', 'running');
-    })
-    .catch((err) => {
-      dialog.showErrorBox("Startup Error", `There was an issue: ${err}`);
-      app.quit();
-    });
+  
+  exec('./resources/colima start --docker', (startErr, startStdout, startStderr) => {
+    if (startErr || startStderr) {
+      console.error('Error starting Colima:', startErr || startStderr);
+    } else {
+      console.log('Colima started:', startStdout);
+      createWindow();
+    }
+  });
+
 });
 
 app.on('window-all-closed', () => {

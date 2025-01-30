@@ -9,3 +9,4 @@ config/**/*
 package-lock.json
 data/**/*
 !data/.gitkeep
+dist

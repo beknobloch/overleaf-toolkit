@@ -6,30 +6,29 @@
   "scripts": {
     "start": "electron .",
     "package": "electron-builder",
-     "build": "electron-builder"
-  },
-  "dependencies": {
-
-
+    "build": "electron-builder"
   },
   "devDependencies": {
-        "electron-builder": "^24.3.0",
-            "electron": "^26.2.0"
+    "electron": "^26.2.0",
+    "electron-builder": "^24.13.3"
   },
   "build": {
-    "appId": "com.example.dockerapp",
-    "productName": "Docker-Electron App",
+    "appId": "com.example.Underbranch",
+    "productName": "Underbranch",
     "directories": {
       "output": "dist"
     },
     "files": [
-"**/*", 
-      "!dist", 
+      "dist/**/*",
+      "main.js",
+      "!dist",
       "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/*.map"
     ],
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+      
     },
     "win": {
       "target": "nsis"
