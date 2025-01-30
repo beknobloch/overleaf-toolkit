@@ -29,6 +29,9 @@
       "target": "dmg",
       "icon": "assets/icon.icns"
       
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+      
     },
     "win": {
       "target": "nsis"
