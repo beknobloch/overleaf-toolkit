@@ -6,18 +6,14 @@
   "scripts": {
     "start": "electron .",
     "package": "electron-builder",
-     "build": "electron-builder"
-  },
-  "dependencies": {
-
-
+    "build": "electron-builder"
   },
   "devDependencies": {
-        "electron-builder": "^24.3.0",
-            "electron": "^26.2.0"
+    "electron": "^26.2.0",
+    "electron-builder": "^24.13.3"
   },
   "build": {
-    "appId": "com.example.dockerapp",
+    "appId": "com.example.Underbranch",
     "productName": "Underbranch",
     "directories": {
       "output": "dist"
