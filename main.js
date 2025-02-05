@@ -5,14 +5,61 @@ const path = require('path');
 
 let mainWindow;
 
-// Paths to your start and stop shell scripts
-const startScriptPath = path.join(__dirname, 'bin/up');
-const stopScriptPath = path.join(__dirname, 'bin/stop');
+// Paths to shell scripts
+// const upScriptPath = path.join(process.resourcesPath,'..', 'bin/up');
+// const stopScriptPath = path.join(process.resourcesPath,'..', 'bin/stop');
+// const startScriptPath = path.join(process.resourcesPath,'..', 'bin/start');
+// const verifyPortScriptPath = path.join(process.resourcesPath,'..', 'bin/verify-port');
+// const openDockerScriptPath = path.join(process.resourcesPath,'..', 'bin/open-docker');
+// const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-compose');
 
+const upScriptPath = path.join(__dirname, 'bin/up');
+const stopScriptPath = path.join(__dirname, 'bin/stop');
+const startScriptPath = path.join(__dirname, 'bin/start');
+const verifyPortScriptPath = path.join(__dirname, 'bin/verify-port');
+const openDockerScriptPath = path.join(__dirname, 'bin/open-docker');
+const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
+
+function enablePermissions(){
+  return new Promise((resolve, reject) => {
+    exec(`chmod -x ${upScriptPath}`)
+    exec(`chmod -x ${stopScriptPath}`)
+    exec(`chmod -x ${verifyPortScriptPath}`)
+    exec(`chmod -x ${openDockerScriptPath}`)
+    exec(`chmod -x ${startScriptPath}`)
+    exec(`chmod -x ${composeScriptPath}`)
+    resolve(true)
+  });
+}
+function verifyPortReady(){
+  return new Promise((resolve, reject) => {
+    exec(`bash ${verifyPortScriptPath}`, (error, stdout, stderr) => {
+
+      if (error) {
+        console.error(`Error: ${error.message}`);
+        reject(error);
+      }
+      if (stderr) {
+        console.error(`Stderr: ${stderr}`);
+      }
+      resolve(true);
+    });
+  });
+}
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers() {
   return new Promise((resolve, reject) => {
-
+    exec(`bash ${upScriptPath}`, (error, stdout, stderr) => {
+      
+      if (error) {
+        console.error(`Error: ${error.message}`);
+        reject(error);
+      }
+      if (stderr) {
+        console.error(`Stderr: ${stderr}`);
+      }
+      resolve(true);
+    });
     /*exec(`bash ${startScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error starting containers: ${error.message}`);
@@ -22,7 +69,6 @@ function startDockerContainers() {
         resolve(true);
       }
     });*/
-    resolve(true)
   });
 }
 
@@ -58,7 +104,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    icon: __dirname + '/assets/icon',
+    icon: __dirname+ '/assets/icon',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -71,17 +117,35 @@ function createWindow() {
 }
 
 // Electron app events
-app.on('ready', () => {
-  checkDockerInstalled()
-    .then(() => startDockerContainers())
-    .then(() => {
+app.on('ready', async () => {
+  console.log('attempting scripts')
+  try{
+    await enablePermissions()
+
+    await checkDockerInstalled()
+    console.log('docker exists')
+    await startDockerContainers()
+   console.log('container started')
+    await verifyPortReady()
+    console.log('port 80 is open and ready for use')
+    
+    
+    }catch(e){
+      dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
+      console.log('error')
+      app.quit()
+    }
+    
+    try {
       createWindow(); // Create the window only after Docker containers are started
-      mainWindow.webContents.send('docker-status', 'running');
-    })
-    .catch((err) => {
+      mainWindow.webContents.openDevTools();
+      console.log('window opened')
+    }
+    catch(err){
       dialog.showErrorBox("Startup Error", `There was an issue: ${err}`);
+      console.log('error')
       app.quit();
-    });
+    };
 });
 
 app.on('window-all-closed', () => {

@@ -23,14 +23,31 @@
       "output": "dist"
     },
     "files": [
-"**/*", 
+      "**/*", 
+      ".gitignore",
+      "bin/**/*",
+      "config/**/*",
       "!dist", 
       "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/*.map"
+      
     ],
     "mac": {
       "target": "dmg",
-      "icon": "assets/icon.icns"
+      "icon": "assets/icon.icns",
+      "files": [
+        "**/*", 
+        ".gitignore",
+        "bin/**/*",
+        "config/**/*",
+        "!dist", 
+        "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+        "!**/*.map"
+        
+      ],
+      "extraFiles" : [
+        "bin", "config"
+      ]
       
     },
     "win": {

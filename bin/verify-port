@@ -1,0 +1,12 @@
+#! /usr/bin/env bash
+URL="http://localhost/login"
+
+# Use curl to check the URL
+HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
+
+while [ "$HTTP_STATUS" -ne 200 ]; do
+  echo "Waiting for localhost/80 to open"
+  sleep 2
+  HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
+done
+echo "Underbranch is ready"

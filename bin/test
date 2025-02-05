@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+
+
+URL="http://localhost/login"
+
+# Use curl to check the URL
+HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
+
+if [ "$HTTP_STATUS" -eq 200 ]; then
+  echo "URL is accessible"
+else
+  echo "URL is not accessible. Status code: $HTTP_STATUS"
+fi
