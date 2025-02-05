@@ -22,12 +22,12 @@ const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
 
 function enablePermissions(){
   return new Promise((resolve, reject) => {
-    exec(`chmod -x ${upScriptPath}`)
-    exec(`chmod -x ${stopScriptPath}`)
-    exec(`chmod -x ${verifyPortScriptPath}`)
-    exec(`chmod -x ${openDockerScriptPath}`)
-    exec(`chmod -x ${startScriptPath}`)
-    exec(`chmod -x ${composeScriptPath}`)
+    exec(`chmod +x ${upScriptPath}`)
+    exec(`chmod +x ${stopScriptPath}`)
+    exec(`chmod +x ${verifyPortScriptPath}`)
+    exec(`chmod +x ${openDockerScriptPath}`)
+    exec(`chmod +x ${startScriptPath}`)
+    exec(`chmod +x ${composeScriptPath}`)
     resolve(true)
   });
 }
@@ -138,7 +138,6 @@ app.on('ready', async () => {
     
     try {
       createWindow(); // Create the window only after Docker containers are started
-      mainWindow.webContents.openDevTools();
       console.log('window opened')
     }
     catch(err){
