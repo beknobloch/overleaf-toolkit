@@ -138,7 +138,6 @@ app.on('ready', async () => {
     
     try {
       createWindow(); // Create the window only after Docker containers are started
-      mainWindow.webContents.openDevTools();
       console.log('window opened')
     }
     catch(err){
