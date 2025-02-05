@@ -2,7 +2,7 @@
 # shellcheck source-path=..
 
 # open docker
-./bin/open-docker 
+./bin/UBR_open-docker 
 
 set -euo pipefail
 

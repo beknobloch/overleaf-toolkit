@@ -16,8 +16,8 @@ let mainWindow;
 const upScriptPath = path.join(__dirname, 'bin/up');
 const stopScriptPath = path.join(__dirname, 'bin/stop');
 const startScriptPath = path.join(__dirname, 'bin/start');
-const verifyPortScriptPath = path.join(__dirname, 'bin/verify-port');
-const openDockerScriptPath = path.join(__dirname, 'bin/open-docker');
+const verifyPortScriptPath = path.join(__dirname, 'bin/UBR_verify-port');
+const openDockerScriptPath = path.join(__dirname, 'bin/UBR_open-docker');
 const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
 
 function enablePermissions(){
