@@ -6,19 +6,19 @@ const path = require('path');
 let mainWindow;
 
 // Paths to shell scripts
-// const upScriptPath = path.join(process.resourcesPath,'..', 'bin/up');
-// const stopScriptPath = path.join(process.resourcesPath,'..', 'bin/stop');
-// const startScriptPath = path.join(process.resourcesPath,'..', 'bin/start');
-// const verifyPortScriptPath = path.join(process.resourcesPath,'..', 'bin/verify-port');
-// const openDockerScriptPath = path.join(process.resourcesPath,'..', 'bin/open-docker');
-// const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-compose');
+const upScriptPath = path.join(process.resourcesPath,'..', 'bin/up');
+const stopScriptPath = path.join(process.resourcesPath,'..', 'bin/stop');
+const startScriptPath = path.join(process.resourcesPath,'..', 'bin/start');
+const verifyPortScriptPath = path.join(process.resourcesPath,'..', 'bin/UBR_verify-port');
+const openDockerScriptPath = path.join(process.resourcesPath,'..', 'bin/UBR_open-docker');
+const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-compose');
 
-const upScriptPath = path.join(__dirname, 'bin/up');
-const stopScriptPath = path.join(__dirname, 'bin/stop');
-const startScriptPath = path.join(__dirname, 'bin/start');
-const verifyPortScriptPath = path.join(__dirname, 'bin/UBR_verify-port');
-const openDockerScriptPath = path.join(__dirname, 'bin/UBR_open-docker');
-const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
+// const upScriptPath = path.join(__dirname, 'bin/up');
+// const stopScriptPath = path.join(__dirname, 'bin/stop');
+// const startScriptPath = path.join(__dirname, 'bin/start');
+// const verifyPortScriptPath = path.join(__dirname, 'bin/UBR_verify-port');
+// const openDockerScriptPath = path.join(__dirname, 'bin/UBR_open-docker');
+// const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
 
 function enablePermissions(){
   return new Promise((resolve, reject) => {
@@ -32,6 +32,8 @@ function enablePermissions(){
   });
 }
 function verifyPortReady(){
+  dialog.showErrorBox("TEST", "TEST");
+    app.quit();
   return new Promise((resolve, reject) => {
     exec(`bash ${verifyPortScriptPath}`, (error, stdout, stderr) => {
 
@@ -51,6 +53,8 @@ function startDockerContainers() {
   return new Promise((resolve, reject) => {
     exec(`bash ${upScriptPath}`, (error, stdout, stderr) => {
       
+      //dialog.showErrorBox(error, `${stdout}, ${stderr}`);
+
       if (error) {
         console.error(`Error: ${error.message}`);
         reject(error);
@@ -101,19 +105,36 @@ function checkDockerInstalled() {
 
 // Create the Electron browser window and load the URL only after Docker containers are started
 function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    icon: __dirname+ '/assets/icon',
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
+  try {
+    mainWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      icon: path.join(__dirname, 'assets', 'icon.png'),
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
+    });
 
-  // Load the web app at http://localhost:3000/launchpad
-  mainWindow.loadURL('http://localhost/launchpad');
+    mainWindow.loadURL('http://localhost/launchpad');
+
+    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+      console.error(`Page failed to load: ${errorDescription} (Error Code: ${errorCode})`);
+      dialog.showErrorBox("Load Error", `The web app could not be loaded: ${errorDescription}`);
+    });
+
+    mainWindow.on('closed', () => {
+      console.log("Window closed");
+      mainWindow = null;
+    });
+
+    console.log('Window created successfully');
+  } catch (e) {
+    console.error("Window creation failed:", e);
+    dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
+    app.quit();
+  }
 }
 
 // Electron app events
@@ -124,9 +145,12 @@ app.on('ready', async () => {
 
     await checkDockerInstalled()
     console.log('docker exists')
+    dialog.showErrorBox("Starting Docker containers", `1`);
     await startDockerContainers()
+    dialog.showErrorBox("Finished starting Docker containers", `2`);
    console.log('container started')
     await verifyPortReady()
+    dialog.showErrorBox("Finished verifying port", `3`);
     console.log('port 80 is open and ready for use')
     
     

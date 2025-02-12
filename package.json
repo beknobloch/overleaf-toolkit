@@ -26,7 +26,10 @@
       "!dist", 
       "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/*.map"
-      
+    ],
+    "asarUnpack": [
+      "bin/**",
+      "lib/**"
     ],
     "mac": {
       "target": "dmg",

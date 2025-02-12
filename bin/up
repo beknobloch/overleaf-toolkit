@@ -1,8 +1,9 @@
 #! /usr/bin/env bash
 # shellcheck source-path=..
+APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 # open docker
-./bin/UBR_open-docker 
+"$APP_DIR/bin/UBR_open-docker"
 
 set -euo pipefail
 
@@ -20,7 +21,7 @@ if [[ ! -d "$TOOLKIT_ROOT/bin" ]] || [[ ! -d "$TOOLKIT_ROOT/config" ]]; then
   exit 1
 fi
 
-source "$TOOLKIT_ROOT/lib/shared-functions.sh"
+source "$APP_DIR/lib/shared-functions.sh"
 
 function usage() {
   echo "Usage: bin/up [FLAGS...]"
