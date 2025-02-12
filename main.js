@@ -32,8 +32,6 @@ function enablePermissions(){
   });
 }
 function verifyPortReady(){
-  dialog.showErrorBox("TEST", "TEST");
-    app.quit();
   return new Promise((resolve, reject) => {
     exec(`bash ${verifyPortScriptPath}`, (error, stdout, stderr) => {
 
@@ -48,10 +46,18 @@ function verifyPortReady(){
     });
   });
 }
+function openDocker(){
+  return new Promise((resolve, reject) => {
+    exec(`bash ${openDockerScriptPath}`, (error, stdout, stderr) => {
+
+      resolve(true);
+    });
+  });
+}
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers() {
   return new Promise((resolve, reject) => {
-    exec(`bash ${upScriptPath}`, (error, stdout, stderr) => {
+    exec(`bash ${composeScriptPath}`, (error, stdout, stderr) => {
       
       //dialog.showErrorBox(error, `${stdout}, ${stderr}`);
 
@@ -61,6 +67,7 @@ function startDockerContainers() {
       }
       if (stderr) {
         console.error(`Stderr: ${stderr}`);
+        reject(stderr);
       }
       resolve(true);
     });
@@ -146,7 +153,8 @@ app.on('ready', async () => {
     await checkDockerInstalled()
     console.log('docker exists')
     dialog.showErrorBox("Starting Docker containers", `1`);
-    await startDockerContainers()
+    //await startDockerContainers()
+    await openDocker()
     dialog.showErrorBox("Finished starting Docker containers", `2`);
    console.log('container started')
     await verifyPortReady()

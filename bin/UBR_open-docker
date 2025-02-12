@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 
 # mac only, need to add OS detection
-open -a Docker && while ! docker system info &>/dev/null; do sleep 1; done
+open -a Docker && while ! /usr/local/bin/docker system info &>/dev/null; do sleep 1; done
 echo 'done'
+exit 0

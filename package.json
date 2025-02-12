@@ -45,7 +45,7 @@
         
       ],
       "extraFiles" : [
-        "bin", "config"
+        "bin", "config", "lib", "data"
       ]
       
     },
