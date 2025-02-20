@@ -22,6 +22,7 @@
       "**/*", 
       ".gitignore",
       "bin/**/*",
+      "data/**/*",
       "config/**/*",
       "!dist", 
       "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
@@ -29,7 +30,8 @@
     ],
     "asarUnpack": [
       "bin/**",
-      "lib/**"
+      "lib/**",
+      "data/**"
     ],
     "mac": {
       "target": "dmg",

@@ -152,13 +152,10 @@ app.on('ready', async () => {
 
     await checkDockerInstalled()
     console.log('docker exists')
-    dialog.showErrorBox("Starting Docker containers", `1`);
-    //await startDockerContainers()
+    // await startDockerContainers()
     await openDocker()
-    dialog.showErrorBox("Finished starting Docker containers", `2`);
    console.log('container started')
     await verifyPortReady()
-    dialog.showErrorBox("Finished verifying port", `3`);
     console.log('port 80 is open and ready for use')
     
     

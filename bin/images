@@ -29,13 +29,13 @@ function __main__() {
     fi
 
     echo "---- Community Edition Images ----"
-    docker images sharelatex/sharelatex
+    /usr/local/bin/docker images sharelatex/sharelatex
     echo "---- Server Pro Images ----"
-    docker images quay.io/sharelatex/sharelatex-pro
+    /usr/local/bin/docker images quay.io/sharelatex/sharelatex-pro
     echo "---- TexLive Images ----"
-    docker images quay.io/sharelatex/texlive-full
+    /usr/local/bin/docker images quay.io/sharelatex/texlive-full
     echo "---- Git Bridge Images ----"
-    docker images quay.io/sharelatex/git-bridge
+    /usr/local/bin/docker images quay.io/sharelatex/git-bridge
 }
 
 __main__ "$@"

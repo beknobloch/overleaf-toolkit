@@ -221,9 +221,9 @@ function print_debug_info() {
 function docker_compose() {
   local flags=(-p "$PROJECT_NAME" "${DOCKER_COMPOSE_FLAGS[@]}" "$@")
    exec /usr/local/bin/docker-compose "${flags[@]}"
-  if docker compose version >/dev/null 2>&1; then
+  if /usr/local/bin/docker compose version >/dev/null 2>&1; then
     # Docker compose v2 is available
-    exec docker compose "${flags[@]}"
+    exec /usr/local/bin/docker compose "${flags[@]}"
   elif command -v docker-compose >/dev/null; then
     # Fall back to docker-compose v1
     if [[ ${SKIP_WARNINGS:-null} != "true" ]]; then

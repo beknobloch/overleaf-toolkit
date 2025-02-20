@@ -125,7 +125,7 @@ function check_dependencies() {
     check_for_binary "$binary"
   done
 
-  if docker compose version > /dev/null 2>&1; then
+  if /usr/local/bin/docker compose version > /dev/null 2>&1; then
     print_point 1 "docker compose"
     print_point 2 "status: present"
     print_point 2 "version info: $(docker compose version)"
@@ -142,7 +142,7 @@ function check_docker_daemon() {
   if docker ps &>/dev/null;  then
     print_point 1 "status: up"
 
-    local docker_server_version=$(docker version -f '{{.Server.Version}}')
+    local docker_server_version=$(/usr/local/bin/docker version -f '{{.Server.Version}}')
     print_point 1 "server version: $docker_server_version"
     if [[ "$docker_server_version" =~ ^([0-9]+)\.([0-9]+) ]]; then
       local major="${BASH_REMATCH[1]}"
@@ -154,7 +154,7 @@ function check_docker_daemon() {
       add_warning "Docker server version unknown ($docker_server_version)"
     fi
 
-    if docker info | grep -q -e '/var/snap/docker/common/var-lib-docker'; then
+    if /usr/local/bin/docker info | grep -q -e '/var/snap/docker/common/var-lib-docker'; then
       add_warning "Installing Docker via snap is not supported. The sandboxed compiles feature may not be available. Please follow the steps for installing Docker CE on https://docs.docker.com/engine/install/."
     fi
   else
