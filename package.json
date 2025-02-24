@@ -60,7 +60,14 @@
       ]
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "assets/icon.ico",
+      "extraFiles": [
+        "bin",
+        "config",
+        "lib",
+        "data"
+  ]
     },
     "linux": {
       "target": "AppImage"
@@ -79,6 +86,9 @@
           "path": "/Applications"
         }
       ]
+    },
+    "nsis": {
+      "oneClick": true
     }
   }
 }
