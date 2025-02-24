@@ -9,8 +9,14 @@
     "build": "electron-builder"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.3",
     "electron": "^26.2.0",
-    "electron-builder": "^24.13.3"
+    "electron-builder": "^24.13.3",
+    "semantic-release": "^24.2.3"
   },
   "build": {
     "appId": "com.example.Underbranch",
@@ -19,12 +25,12 @@
       "output": "dist"
     },
     "files": [
-      "**/*", 
+      "**/*",
       ".gitignore",
       "bin/**/*",
       "data/**/*",
       "config/**/*",
-      "!dist", 
+      "!dist",
       "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/*.map"
     ],
@@ -37,17 +43,19 @@
       "target": "dmg",
       "icon": "assets/icon.icns",
       "files": [
-        "**/*", 
+        "**/*",
         ".gitignore",
         "bin/**/*",
         "config/**/*",
-        "!dist", 
+        "!dist",
         "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
         "!**/*.map"
-        
       ],
-      "extraFiles" : [
-        "bin", "config", "lib", "data"
+      "extraFiles": [
+        "bin",
+        "config",
+        "lib",
+        "data"
       ]
     },
     "win": {
@@ -56,11 +64,19 @@
     "linux": {
       "target": "AppImage"
     },
-
     "dmg": {
       "contents": [
-        { "x": 130, "y": 220, "type": "file" },
-        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+        {
+          "x": 130,
+          "y": 220,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
       ]
     }
   }
