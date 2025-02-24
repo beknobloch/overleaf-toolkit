@@ -59,8 +59,6 @@ function startDockerContainers() {
   return new Promise((resolve, reject) => {
     exec(`bash ${composeScriptPath}`, (error, stdout, stderr) => {
       
-      //dialog.showErrorBox(error, `${stdout}, ${stderr}`);
-
       if (error) {
         console.error(`Error: ${error.message}`);
         reject(error);
@@ -71,7 +69,7 @@ function startDockerContainers() {
       }
       resolve(true);
     });
-    /*exec(`bash ${startScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
+    exec(`bash ${startScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error starting containers: ${error.message}`);
         reject(error);
@@ -79,7 +77,7 @@ function startDockerContainers() {
         console.log("Containers started:", stdout);
         resolve(true);
       }
-    });*/
+    });
   });
 }
 
@@ -152,9 +150,9 @@ app.on('ready', async () => {
 
     await checkDockerInstalled()
     console.log('docker exists')
-    // await startDockerContainers()
+    await startDockerContainers()
     await openDocker()
-   console.log('container started')
+    console.log('container started')
     await verifyPortReady()
     console.log('port 80 is open and ready for use')
     

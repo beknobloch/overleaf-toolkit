@@ -64,7 +64,7 @@ function canonicalize_data_paths() {
   fi
   MONGO_DATA_PATH=$(cd "$TOOLKIT_ROOT"; realpath "$MONGO_DATA_PATH")
   REDIS_DATA_PATH=$(cd "$TOOLKIT_ROOT"; realpath "$REDIS_DATA_PATH")
-  GIT_BRIDGE_DATA_PATH=$(cd "$TOOLKIT_ROOT"; realpath "$GIT_BRIDGE_DATA_PATH")
+  GIT_BRIDGE_DATA_PATH="$TOOLKIT_ROOT/data/git-bridge"
 }
 
 # Set environment variables for docker-compose.base.yml
@@ -219,6 +219,7 @@ function print_debug_info() {
 }
 
 function docker_compose() {
+  echo "THIS IS RUNNING!"
   local flags=(-p "$PROJECT_NAME" "${DOCKER_COMPOSE_FLAGS[@]}" "$@")
    exec /usr/local/bin/docker-compose "${flags[@]}"
   if /usr/local/bin/docker compose version >/dev/null 2>&1; then
