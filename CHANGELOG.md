@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.1.0...v1.2.0) (2025-02-24)
+
+
+### Features
+
+* **MacOS:** added nicer MacOS installation visual ([c59aabb](https://github.com/beknobloch/overleaf-toolkit/commit/c59aabbf1f07964dd56508ed55d0609800490d63))
+
 # [1.1.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.0.1...v1.1.0) (2025-02-24)
 
 
