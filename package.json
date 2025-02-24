@@ -73,15 +73,20 @@
       "target": "AppImage"
     },
     "dmg": {
+      "background": "assets/installerBackground.png",
+      "window": {
+        "width": 450,
+        "height": 522
+      },
       "contents": [
         {
-          "x": 130,
-          "y": 220,
+          "x": 150,
+          "y": 390,
           "type": "file"
         },
         {
-          "x": 410,
-          "y": 220,
+          "x": 350,
+          "y": 390,
           "type": "link",
           "path": "/Applications"
         }
