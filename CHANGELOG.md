@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/beknobloch/overleaf-toolkit/compare/v1.0.0...v1.0.1) (2025-02-24)
+
+
+### Bug Fixes
+
+* **release:** corrected team name as test of automated release workflow ([59f7d91](https://github.com/beknobloch/overleaf-toolkit/commit/59f7d91511b291e74753a49d8e214adbec00956c))
+
 # 1.0.0 (2025-02-24)
 
 
