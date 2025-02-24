@@ -1,3 +1,12 @@
+# 1.0.0 (2025-02-24)
+
+
+### Bug Fixes
+
+* **nginx:** typo ([7f9f816](https://github.com/beknobloch/overleaf-toolkit/commit/7f9f81673b989d0d918fcd1d60c253cfe17bc9f7))
+* **release:** add GitHub Actions token to build process ([d26526c](https://github.com/beknobloch/overleaf-toolkit/commit/d26526c048ac44c035813ceb2d02847a31c84247))
+* **release:** fix to release.yaml ([31a345b](https://github.com/beknobloch/overleaf-toolkit/commit/31a345b56f6e54614c92d007a53b4843671d839b))
+
 # Changelog
 
 ## 2024-10-29
