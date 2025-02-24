@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.0.1...v1.1.0) (2025-02-24)
+
+
+### Features
+
+* **release:** repaired configurations for Windows nsis installer wizard ([3a2e83c](https://github.com/beknobloch/overleaf-toolkit/commit/3a2e83c08d27c69a3022bb440cf53b56beec840f))
+
 ## [1.0.1](https://github.com/beknobloch/overleaf-toolkit/compare/v1.0.0...v1.0.1) (2025-02-24)
 
 

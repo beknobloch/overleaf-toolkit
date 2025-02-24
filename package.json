@@ -1,6 +1,6 @@
 {
   "name": "docker-electron-app",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "author": "The Tater Tots",
   "description": "An Electron app that controls Docker containers using a shell script",
   "main": "main.js",
@@ -67,7 +67,7 @@
         "config",
         "lib",
         "data"
-  ]
+      ]
     },
     "linux": {
       "target": "AppImage"
