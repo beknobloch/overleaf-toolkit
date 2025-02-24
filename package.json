@@ -73,7 +73,7 @@
       "target": "AppImage"
     },
     "dmg": {
-      "background": "assets/installerBackground.png",
+      "background": "assets/installer-background.png",
       "window": {
         "width": 450,
         "height": 522
