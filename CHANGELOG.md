@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.0...v1.2.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* **installer:** add missing arrow element to MacOS visual installer ([51b6250](https://github.com/beknobloch/overleaf-toolkit/commit/51b6250fb4d81a54e51cec40bfd67e24110d7ce1))
+
 # [1.2.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.1.0...v1.2.0) (2025-02-24)
 
 
