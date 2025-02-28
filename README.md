@@ -1,12 +1,15 @@
-# Underbranch
+# Underbranch  
 
-This repository contains Underbranch, an Electron.js desktop applicatioin version of [Overleaf](https://overleaf.com). This release allows you to install Underbranch on MacOS or Windows via an easy visual process.
+Underbranch is an Electron.js desktop application that brings Overleaf-style LaTeX editing to your local machine. This release provides a simple graphical installer for macOS and Windows, allowing users to work offline while maintaining full Overleaf compatibility.  
 
-Please reference the user manual or developer manual for further documentation on installation, features, and other important information.
+For installation, features, and troubleshooting, please refer to the [User Manual](#) and [Developer Manual](#).  
 
+## Getting Started  
 
-## Getting Started
+Underbranch requires [Docker Desktop](https://docs.docker.com/get-started/get-docker/) to function.  
 
-Please note that Underbranch relies on [Docker Desktop (downloads available here)](https://docs.docker.com/get-started/get-docker/).
+### Installation Steps:
+1. Download and install the correct version of Docker for your operating system.
+2. Follow the [installation guide](#) to set up Underbranch on your machine.
 
-Please be sure to install the correct version of Docker for your operating system.
+For additional details, visit our [documentation](#).
