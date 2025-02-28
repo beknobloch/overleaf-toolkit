@@ -12,4 +12,4 @@ Underbranch requires [Docker Desktop](https://docs.docker.com/get-started/get-do
 1. Download and install the correct version of Docker for your operating system.
 2. Follow the [installation guide](#) to set up Underbranch on your machine.
 
-For additional details, visit our [documentation](#).
+For additional details, visit our [Software Design Document](doc/SoftwareDesignDocument_2_28_25.pdf).
