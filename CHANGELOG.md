@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.1...v1.2.2) (2025-03-05)
+
+
+### Bug Fixes
+
+* **image creation:** fixed issue with images not being created ([80dd22c](https://github.com/beknobloch/overleaf-toolkit/commit/80dd22c10e2916ed57d628c658a9540b4bbfd864))
+
 ## [1.2.1](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.0...v1.2.1) (2025-02-27)
 
 
