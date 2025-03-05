@@ -57,19 +57,7 @@ function openDocker(){
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers() {
   return new Promise((resolve, reject) => {
-    exec(`bash ${composeScriptPath}`, (error, stdout, stderr) => {
-      
-      if (error) {
-        console.error(`Error: ${error.message}`);
-        reject(error);
-      }
-      if (stderr) {
-        console.error(`Stderr: ${stderr}`);
-        reject(stderr);
-      }
-      resolve(true);
-    });
-    exec(`bash ${startScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
+    exec(`bash ${upScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error starting containers: ${error.message}`);
         reject(error);
@@ -83,14 +71,16 @@ function startDockerContainers() {
 
 // Stop Docker containers using the stop script
 function stopDockerContainers() {
-  exec(`bash ${stopScriptPath}`, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error stopping containers: ${error.message}`);
-      dialog.showErrorBox('Error', `Could not stop Docker containers: ${error.message}`);
-    } else {
-      console.log("Containers stopped:", stdout);
-      mainWindow.webContents.send('docker-status', 'stopped');
-    }
+  return new Promise((resolve, reject) => {
+    exec(`bash ${stopScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error stopping containers: ${error.message}`);
+        reject(error);
+      } else {
+        console.log("Containers stopped:", stdout);
+        resolve(true);
+      }
+    });
   });
 }
 
@@ -147,7 +137,6 @@ app.on('ready', async () => {
   console.log('attempting scripts')
   try{
     await enablePermissions()
-
     await checkDockerInstalled()
     console.log('docker exists')
     await startDockerContainers()
@@ -174,9 +163,9 @@ app.on('ready', async () => {
     };
 });
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
-    stopDockerContainers();
+    await stopDockerContainers();
     app.quit();
   }
 });

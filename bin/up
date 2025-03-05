@@ -8,7 +8,7 @@ SCRIPT_PATH="$(realpath "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 TOOLKIT_ROOT="$(realpath "$SCRIPT_DIR/..")"
 
-#"$TOOLKIT_ROOT/bin/UBR_open-docker"
+"$TOOLKIT_ROOT/bin/UBR_open-docker"
 
 set -euo pipefail
 
