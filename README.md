@@ -1,37 +1,17 @@
-# Overleaf Toolkit
+# Underbranch  
 
-This repository contains the Overleaf Toolkit, the standard tools for running a local
-instance of [Overleaf](https://overleaf.com). This toolkit will help you to set up and administer both Overleaf Community Edition (free to use, and community supported), and Overleaf Server Pro (commercial, with professional support).
+Underbranch is an Electron.js desktop application that brings Overleaf-style LaTeX editing to your local machine. This release provides a simple graphical installer for macOS and Windows, allowing users to work offline while maintaining full Overleaf compatibility.  
 
-The [Developer wiki](https://github.com/overleaf/overleaf/wiki) contains further documentation on releases, features and other configuration elements.
+For installation, features, and troubleshooting, please refer to [Installation Steps](#installation-steps). 
 
+Additionally, you can find more detailed guidance in our User Manual.  
 
-## Getting Started
+## Getting Started  
 
-Clone this repository locally:
+Underbranch requires Docker Desktop to function.  
 
-``` sh
-git clone https://github.com/overleaf/toolkit.git ./overleaf-toolkit
-```
+### Installation Steps:
+1. Download and install the correct version of [Docker Desktop](https://docs.docker.com/get-started/get-docker/) for your operating system.
+2. Retrieve the appropriate installer for your operating system under [Latest Release](https://github.com/beknobloch/overleaf-toolkit/releases/latest) to set up Underbranch on your machine.
 
-Then follow the [Quick Start Guide](./doc/quick-start-guide.md).
-
-
-## Documentation
-
-See [Documentation Index](./doc/README.md)
-
-
-## Contributing
-
-See the [CONTRIBUTING](https://github.com/overleaf/overleaf/blob/main/CONTRIBUTING.md) file.
-
-
-## Getting Help
-
-Users of the free Community Edition should [open an issue on github](https://github.com/overleaf/toolkit/issues). 
-
-Users of Server Pro should contact `support@overleaf.com` for assistance.
-
-In both cases, it is a good idea to include the output of the `bin/doctor` script in your message.
-
+For additional details, please take a look at our [Software Design Document](./Software%20Design%20Document%20-%20March%202025.pdf).
