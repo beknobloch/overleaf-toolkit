@@ -93,7 +93,21 @@
       ]
     },
     "nsis": {
-      "oneClick": true
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Underbranch",
+      "installerHeader": "assets/installer-header.bmp",
+      "installerSidebar": "assets/installer-sidebar.bmp",
+      "include": "build/installer.nsh",
+      "extraFiles": [
+        "bin",
+        "config",
+        "lib",
+        "data"
+      ]
     }
   }
 }
