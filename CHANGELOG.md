@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.3...v1.2.4) (2025-03-12)
+
+
+### Bug Fixes
+
+* **release:** corrected icon.ico format ([19c2d5f](https://github.com/beknobloch/overleaf-toolkit/commit/19c2d5f82dc9b7fac0e317505314ca306d8df4df))
+
 ## [1.2.3](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.2...v1.2.3) (2025-03-12)
 
 
