@@ -1,0 +1,36 @@
+#! /usr/bin/env bash
+# shellcheck source-path=..
+
+SCRIPT_PATH="$(realpath "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+TOOLKIT_ROOT="$(realpath "$SCRIPT_DIR/..")"
+
+"$TOOLKIT_ROOT/bin/UBR_open-docker"
+"$TOOLKIT_ROOT/bin/up"
+
+# updates texlive
+docker exec sharelatex tlmgr update --self
+docker exec sharelatex tlmgr option repository ftp://tug.org/historic/systems/texlive/2024/tlnet-final
+
+packages=()
+failed_packages=()
+
+# goes through list of arguments where each one is a latex package
+while IFS= read -r line; do
+    result=$(docker exec sharelatex tlmgr install "$line" 2>&1)
+
+    if echo "$result" | grep -q "not present in repository"; then
+        failed_packages+=("$line")
+    else
+        echo "$line installed"
+    fi
+done < "$TOOLKIT_ROOT/bin/test.txt"
+
+if [ ${#failed_packages[@]} -gt 0 ]; then
+    echo "The following packages do not exist and failed to install:"
+    for item in "${failed_packages[@]}"; do
+        echo "$item"
+    done
+else
+    echo "All packages were successfully installed"
+fi

@@ -1,4 +1,12 @@
 #! /usr/bin/env bash
+
+# open docker
+SCRIPT_PATH="$(realpath "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+TOOLKIT_ROOT="$(realpath "$SCRIPT_DIR/..")"
+
+"$TOOLKIT_ROOT/bin/UBR_open-docker"
+
 set -euo pipefail
 
 #### Detect Toolkit Project Root ####

@@ -1,0 +1,4 @@
+latexindent
+standalone
+fontspec
+UBR_END
