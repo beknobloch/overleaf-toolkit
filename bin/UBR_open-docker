@@ -1,6 +1,24 @@
 #! /usr/bin/env bash
 
-# mac only, need to add OS detection
-open -a Docker && while ! /usr/local/bin/docker system info &>/dev/null; do sleep 1; done
-echo 'done'
+OS="$(uname -s)"
+
+if [[ "$OS" == "Darwin" ]]; then
+    # macOS
+    DOCKER_BIN=$(which docker)
+    open -a Docker
+elif [[ "$OS" == "MINGW64_NT"* || "$OS" == "MSYS_NT"* || "$OS" == "CYGWIN_NT"* ]]; then
+    # Windows (Git Bash / Cygwin)
+    DOCKER_BIN=$(where docker | head -n 1)
+    start "" "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+else
+    echo "Unsupported OS"
+    exit 1
+fi
+
+# Wait for Docker to be ready
+while ! $DOCKER_BIN system info &>/dev/null; do
+    sleep 1
+done
+
+echo "Docker is ready!"
 exit 0
