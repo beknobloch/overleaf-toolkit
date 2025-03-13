@@ -4,9 +4,35 @@ on:
   push:
     branches:
       - master
+      - test
 
 jobs:
+  test-build:
+    if: github.ref == 'refs/heads/test'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Electron App
+        run: npm run build
+
   release-macos:
+    if: github.ref == 'refs/heads/master'
     runs-on: macos-latest
     steps:
       - name: Checkout repository
@@ -33,6 +59,7 @@ jobs:
         run: npx semantic-release
 
   release-windows:
+    if: github.ref == 'refs/heads/master'
     runs-on: windows-latest
     steps:
       - name: Checkout repository
