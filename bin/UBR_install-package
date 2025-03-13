@@ -6,11 +6,11 @@ SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 TOOLKIT_ROOT="$(realpath "$SCRIPT_DIR/..")"
 
 "$TOOLKIT_ROOT/bin/UBR_open-docker"
-"$TOOLKIT_ROOT/bin/up"
+"$TOOLKIT_ROOT/bin/start"
 
 # updates texlive
+docker exec sharelatex tlmgr option repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2024/tlnet-final/
 docker exec sharelatex tlmgr update --self
-docker exec sharelatex tlmgr option repository ftp://tug.org/historic/systems/texlive/2024/tlnet-final
 
 packages=()
 failed_packages=()
