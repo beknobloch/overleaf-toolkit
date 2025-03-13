@@ -1,6 +1,6 @@
 {
   "name": "docker-electron-app",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "author": "The Tater Tots",
   "description": "An Electron app that controls Docker containers using a shell script",
   "main": "main.js",
@@ -60,7 +60,10 @@
       ]
     },
     "win": {
-      "target": ["nsis", "msi"],
+      "target": [
+        "nsis",
+        "msi"
+      ],
       "icon": "assets/icon.ico",
       "extraFiles": [
         "bin",

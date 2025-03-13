@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.4...v1.2.5) (2025-03-13)
+
+
+### Bug Fixes
+
+* **release:** added GitHub access token to test builds ([7260825](https://github.com/beknobloch/overleaf-toolkit/commit/7260825c749e778e1623a87a067edbadcb9189a9))
+
 ## [1.2.4](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.3...v1.2.4) (2025-03-12)
 
 
