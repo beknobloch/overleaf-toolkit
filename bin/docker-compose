@@ -221,7 +221,20 @@ function print_debug_info() {
 function docker_compose() {
   echo "THIS IS RUNNING!"
   local flags=(-p "$PROJECT_NAME" "${DOCKER_COMPOSE_FLAGS[@]}" "$@")
-  DOCKER_BIN=$(which docker)
+  
+  OS="$(uname -s)"
+
+  if [[ "$OS" == "Darwin" ]]; then
+      # macOS
+      DOCKER_BIN=$(which docker)
+  elif [[ "$OS" == "MINGW64_NT"* || "$OS" == "MSYS_NT"* || "$OS" == "CYGWIN_NT"* ]]; then
+      # Windows (Git Bash / Cygwin)
+      DOCKER_BIN=$(where docker | head -n 1)
+  else
+      echo "Unsupported OS"
+      exit 1
+  fi
+
    #exec $DOCKER_BIN-compose "${flags[@]}"
   if $DOCKER_BIN compose version >/dev/null 2>&1; then
     # Docker compose v2 is available
