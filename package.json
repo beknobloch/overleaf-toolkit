@@ -60,7 +60,7 @@
       ]
     },
     "win": {
-      "target": "nsis",
+      "target": ["nsis", "msi"],
       "icon": "assets/icon.ico",
       "extraFiles": [
         "bin",
@@ -101,7 +101,8 @@
       "shortcutName": "Underbranch",
       "installerHeader": "assets/installer-header.bmp",
       "installerSidebar": "assets/installer-sidebar.bmp",
-      "include": "build/installer.nsh"
+      "include": "build/installer.nsh",
+      "artifactName": "Underbranch-Setup-${arch}.${ext}"
     }
   }
 }
