@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.6...v1.2.7) (2025-03-13)
+
+
+### Bug Fixes
+
+* **docker:** finished making scripts agnostic to OS ([dd9b955](https://github.com/beknobloch/overleaf-toolkit/commit/dd9b9551111710f01047b4ea140e61aba2f8c676))
+
 ## [1.2.6](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.5...v1.2.6) (2025-03-13)
 
 
