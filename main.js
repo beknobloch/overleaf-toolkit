@@ -86,7 +86,9 @@ function stopDockerContainers() {
 
 function checkDockerInstalled() {
   return new Promise((resolve, reject) => {
-    exec('/usr/local/bin/docker -v', (error, stdout) => {
+    const command = process.platform === "win32" ? "docker -v" : "/usr/local/bin/docker -v";
+
+    exec(command, (error, stdout) => {
       if (error) {
         console.error("Docker is not installed or not accessible.");
         reject("Docker is not installed or not accessible.");
