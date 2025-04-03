@@ -30,7 +30,7 @@ if (os.platform() === "darwin") {
   ];
 
   bashCommand = gitBashPaths.find(fs.existsSync);
-  if (!gitBash) {
+  if (!bashCommand) {
     console.error("Git Bash not found! Please install Git for Windows from https://gitforwindows.org/");
     require("electron").shell.openExternal("https://gitforwindows.org/");
     process.exit(1);
