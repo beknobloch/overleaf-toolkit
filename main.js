@@ -20,6 +20,26 @@ const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-comp
 // const openDockerScriptPath = path.join(__dirname, 'bin/UBR_open-docker');
 // const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
 
+let bashCommand = `bash`;
+if (os.platform() === "darwin") {
+
+} else if (os.platform() === "win32") {
+  const gitBashPaths = [
+    "C:\\Program Files\\Git\\bin\\bash.exe",
+    "C:\\Program Files (x86)\\Git\\bin\\bash.exe"
+  ];
+
+  bashCommand = gitBashPaths.find(fs.existsSync);
+  if (!gitBash) {
+    console.error("Git Bash not found! Please install Git for Windows from https://gitforwindows.org/");
+    require("electron").shell.openExternal("https://gitforwindows.org/");
+    process.exit(1);
+  }
+} else {
+  console.error("Unsupported OS");
+  process.exit(1);
+}
+
 function enablePermissions(){
   return new Promise((resolve, reject) => {
     exec(`chmod +x ${upScriptPath}`)
@@ -33,7 +53,7 @@ function enablePermissions(){
 }
 function verifyPortReady(){
   return new Promise((resolve, reject) => {
-    exec(`bash ${verifyPortScriptPath}`, (error, stdout, stderr) => {
+    exec(`${bashCommand} ${verifyPortScriptPath}`, (error, stdout, stderr) => {
 
       if (error) {
         console.error(`Error: ${error.message}`);
@@ -48,7 +68,7 @@ function verifyPortReady(){
 }
 function openDocker(){
   return new Promise((resolve, reject) => {
-    exec(`bash ${openDockerScriptPath}`, (error, stdout, stderr) => {
+    exec(`${bashCommand} ${openDockerScriptPath}`, (error, stdout, stderr) => {
 
       resolve(true);
     });
@@ -57,7 +77,7 @@ function openDocker(){
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers() {
   return new Promise((resolve, reject) => {
-    exec(`bash ${upScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
+    exec(`${bashCommand} ${upScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error starting containers: ${error.message}`);
         reject(error);
@@ -72,7 +92,7 @@ function startDockerContainers() {
 // Stop Docker containers using the stop script
 function stopDockerContainers() {
   return new Promise((resolve, reject) => {
-    exec(`bash ${stopScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
+    exec(`${bashCommand} ${stopScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error stopping containers: ${error.message}`);
         reject(error);
