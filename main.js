@@ -114,7 +114,7 @@ function createWindow() {
       },
     });
 
-    mainWindow.loadURL('http://localhost/launchpad');
+    mainWindow.loadURL('http://localhost:8080/launchpad');
 
     mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
       console.error(`Page failed to load: ${errorDescription} (Error Code: ${errorCode})`);
@@ -139,13 +139,16 @@ app.on('ready', async () => {
   console.log('attempting scripts')
   try{
     await enablePermissions()
+    //dialog.showErrorBox("Startup Error", `1`);
     await checkDockerInstalled()
+    //dialog.showErrorBox("Startup Error", `2`);
     console.log('docker exists')
     await startDockerContainers()
-    await openDocker()
-    console.log('container started')
+    //dialog.showErrorBox("Startup Error", `3`);
+
     await verifyPortReady()
     console.log('port 80 is open and ready for use')
+    //dialog.showErrorBox("Startup Error", `4`);
     
     
     }catch(e){
