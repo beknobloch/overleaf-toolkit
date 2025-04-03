@@ -21,9 +21,9 @@ const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-comp
 // const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
 
 let bashCommand = `bash`;
-if (process.platform() === "darwin") {
+if (process.platform === "darwin") {
 
-} else if (process.platform() === "win32") {
+} else if (process.platform === "win32") {
   const gitBashPaths = [
     "C:\\Program Files\\Git\\bin\\bash.exe",
     "C:\\Program Files (x86)\\Git\\bin\\bash.exe"
