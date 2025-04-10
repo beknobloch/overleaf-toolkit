@@ -1,3 +1,16 @@
+## [1.2.8](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.7...v1.2.8) (2025-04-10)
+
+
+### Bug Fixes
+
+* added missing import ([d7082eb](https://github.com/beknobloch/overleaf-toolkit/commit/d7082ebbf4d8504a10c214c2c8ce4f32c5fa9700))
+* **bash:** Added support for using Git bash when starting Underbranch on Windows ([7bfbe93](https://github.com/beknobloch/overleaf-toolkit/commit/7bfbe93583761e03e3629e01e95b099f4dc96170))
+* **bash:** variable name typo fixed ([0214fc2](https://github.com/beknobloch/overleaf-toolkit/commit/0214fc22dc6fc4a6e89e3d2187f471aa6fa7b21e))
+* bug fix ([e8562eb](https://github.com/beknobloch/overleaf-toolkit/commit/e8562ebd45a00d34a054e70d29be00d7c52de884))
+* **docker check:** add conditional to correctly check the existence of a Docker installation for Windows users ([72afec1](https://github.com/beknobloch/overleaf-toolkit/commit/72afec1953cb58b80bdb009e0cb7be59d22a7bb1))
+* **packages:** installing packages in prod ([fed1040](https://github.com/beknobloch/overleaf-toolkit/commit/fed1040f8995e506596dfd701b88b161be1a21ac))
+* replaced incorrect variable reference ([977c9a4](https://github.com/beknobloch/overleaf-toolkit/commit/977c9a46b889d944c44e2a5786ae348463bf1d33))
+
 ## [1.2.7](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.6...v1.2.7) (2025-03-13)
 
 
