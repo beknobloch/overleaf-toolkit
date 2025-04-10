@@ -14,4 +14,4 @@ Underbranch requires Docker Desktop to function.
 1. Download and install the correct version of [Docker Desktop](https://docs.docker.com/get-started/get-docker/) for your operating system.
 2. Retrieve the appropriate installer for your operating system under [Latest Release](https://github.com/beknobloch/overleaf-toolkit/releases/latest) to set up Underbranch on your machine.
 
-For additional details, please take a look at our [Software Design Document](./Software%20Design%20Document%20-%20March%202025.pdf).
+For additional details, please take a look at our [Software Design Document](./Underbranch%20User%20Manual.pdf).
