@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+# shellcheck source-path=..
+
+cd /usr/local/texlive
+cp -a 2024 YEAR=$(date +%Y)
+
+wget https://ctan.math.washington.edu/tex-archive/systems/texlive/tlnet/update-tlmgr-latest.sh
+
+sh update-tlmgr-latest.sh -- --upgrade
