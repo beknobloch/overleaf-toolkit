@@ -1,3 +1,10 @@
+## [1.2.9](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.8...v1.2.9) (2025-04-15)
+
+
+### Bug Fixes
+
+* **docker:** modified the access locations for Docker images so that the installed application on MacOS has correct permissions ([e320e39](https://github.com/beknobloch/overleaf-toolkit/commit/e320e39a46b2f4d9300ab6353218613e8f5fd31c))
+
 ## [1.2.8](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.7...v1.2.8) (2025-04-10)
 
 
