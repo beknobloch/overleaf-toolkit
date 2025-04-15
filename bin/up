@@ -98,10 +98,23 @@ function notify_about_not_using_detach_mode() {
 }
 
 function create_data_directories() {
-  mkdir -p "$TOOLKIT_ROOT/data/git-bridge"
-  mkdir -p "$TOOLKIT_ROOT/data/mongo"
-  mkdir -p "$TOOLKIT_ROOT/data/overleaf"
-  mkdir -p "$TOOLKIT_ROOT/data/redis"
+  if [[ -z "${HOME:-}" ]]; then
+    if command -v dscl >/dev/null 2>&1; then
+      HOME=$(dscl . -read /Users/$(whoami) NFSHomeDirectory | awk '{print $2}')
+    else
+      echo "ERROR: Could not determine HOME directory"
+      exit 1
+    fi
+  fi
+
+  DATA_ROOT="$HOME/.underbranch-data"
+
+  mkdir -p "$DATA_ROOT/git-bridge"
+  mkdir -p "$DATA_ROOT/mongo"
+  mkdir -p "$DATA_ROOT/overleaf"
+  mkdir -p "$DATA_ROOT/redis"
+
+  export DATA_ROOT
 }
 
 function __main__() {
@@ -126,7 +139,7 @@ function __main__() {
 
   notify_about_not_using_detach_mode "$@"
 
-  exec "$TOOLKIT_ROOT/bin/docker-compose" up -d "$@"
+  exec env DATA_ROOT="$DATA_ROOT" "$TOOLKIT_ROOT/bin/docker-compose" up -d "$@"
 }
 
 __main__ "$@"
