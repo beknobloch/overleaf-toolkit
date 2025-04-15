@@ -1,12 +1,12 @@
----
 services:
 
     sharelatex:
         restart: always
         image: "${IMAGE}"
         container_name: sharelatex
+        platform: linux/amd64
         volumes:
-            - "${OVERLEAF_DATA_PATH}:${OVERLEAF_IN_CONTAINER_DATA_PATH}"
+            - "${DATA_ROOT}/overleaf:/var/lib/overleaf"
         ports:
             - "8080:80"
         environment:
