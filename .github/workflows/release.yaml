@@ -82,9 +82,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build -- --win --x64
 
-      - name: Upload Windows Installer to Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*.exe
+      - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
