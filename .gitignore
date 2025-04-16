@@ -10,4 +10,6 @@ package-lock.json
 data/**/*
 !data/.gitkeep
 dist
+!dist/*.exe
+!dist/*.dmg
 package-lock.json
