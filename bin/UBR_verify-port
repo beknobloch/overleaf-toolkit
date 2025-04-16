@@ -4,9 +4,17 @@ URL="http://localhost:8080/login"
 # Use curl to check the URL
 HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
 
+MAX_RETRIES=90
+RETRY_COUNT=0
+
 while [ "$HTTP_STATUS" -ne 200 ]; do
+  if [ "$RETRY_COUNT" -ge "$MAX_RETRIES" ]; then
+    echo "ERROR: Timed out waiting for localhost/login"
+    exit 1
+  fi
   echo "Waiting for localhost/login to open"
   sleep 2
   HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}" "$URL")
+  RETRY_COUNT=$((RETRY_COUNT + 1))
 done
 echo "Underbranch is ready"
