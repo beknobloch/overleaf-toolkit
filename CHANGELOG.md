@@ -1,3 +1,10 @@
+## [1.2.10](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.9...v1.2.10) (2025-04-16)
+
+
+### Bug Fixes
+
+* **Windows:** Made fixes to main.js to avoid potential problems with launching on win32 ([a51d786](https://github.com/beknobloch/overleaf-toolkit/commit/a51d786ce8b4cea822e889e99ebd5e0aaef55966))
+
 ## [1.2.9](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.8...v1.2.9) (2025-04-15)
 
 
