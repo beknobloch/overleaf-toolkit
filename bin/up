@@ -3,6 +3,12 @@
 
 APP_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
+#### Detect Toolkit Project Root ####
+# if realpath is not available, create a semi-equivalent function
+command -v realpath >/dev/null 2>&1 || realpath() {
+  [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
 # open docker
 SCRIPT_PATH="$(realpath "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
@@ -11,12 +17,6 @@ TOOLKIT_ROOT="$(realpath "$SCRIPT_DIR/..")"
 "$TOOLKIT_ROOT/bin/UBR_open-docker"
 
 set -euo pipefail
-
-#### Detect Toolkit Project Root ####
-# if realpath is not available, create a semi-equivalent function
-command -v realpath >/dev/null 2>&1 || realpath() {
-  [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
-}
 
 
 if [[ ! -d "$TOOLKIT_ROOT/bin" ]] || [[ ! -d "$TOOLKIT_ROOT/config" ]]; then
@@ -74,7 +74,7 @@ function pull_sandboxed_compiles() {
   echo "Pulling TeX Live images..."
   for image in ${images//,/ }; do
     echo "  - $image download started (may take some time)"
-    docker pull $image
+    docker pull "$image"
     echo "  - $image download finished"
   done
 }
@@ -99,9 +99,8 @@ function notify_about_not_using_detach_mode() {
 
 function create_data_directories() {
   if [[ -z "${HOME:-}" ]]; then
-    if command -v dscl >/dev/null 2>&1; then
-      HOME=$(dscl . -read /Users/$(whoami) NFSHomeDirectory | awk '{print $2}')
-    else
+    HOME="$(eval echo ~)"
+    if [[ -z "$HOME" ]]; then
       echo "ERROR: Could not determine HOME directory"
       exit 1
     fi
