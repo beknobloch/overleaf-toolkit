@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+OS=$(uname -s)
+
+if [[ "$OS" == "Linux" || "$OS" == "Darwin" ]]; then
+    # Run script directly
+    "$(dirname "${BASH_SOURCE[0]}")/UBR_install-package"
+elif [[ "$OS" =~ MINGW.* || "$OS" =~ MSYS.* || "$OS" =~ CYGWIN.* ]]; then
+    echo "Detected Windows environment via Git Bash or similar."
+
+    WSL_AVAILABLE=$(which wsl || true)
+    if [ -n "$WSL_AVAILABLE" ]; then
+        echo "Using WSL to run the installation script..."
+        wsl bash -c "$(wslpath -a "$(dirname "${BASH_SOURCE[0]}")")/UBR_install-package"
+    else
+        echo "WSL not available. Please run this script from a WSL environment or install WSL."
+        exit 1
+    fi
+else
+    echo "Unsupported operating system: $OS"
+    exit 1
+fi

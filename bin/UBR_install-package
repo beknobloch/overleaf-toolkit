@@ -1,15 +1,30 @@
 #! /usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
 # shellcheck source-path=..
 
 SCRIPT_PATH="$(realpath "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 TOOLKIT_ROOT="$(realpath "$SCRIPT_DIR/..")"
-echo $TOOLKIT_ROOT
+echo -e "${YELLOW}[INFO] Toolkit root detected at:${NC} $TOOLKIT_ROOT"
 DOCKER_BIN=$(which docker)
 
+if ! command -v docker &> /dev/null; then
+    echo -e "${RED}[ERROR] Docker is not installed or not in PATH.${NC}"
+    exit 1
+fi
+
+echo -e "${YELLOW}[INFO] Launching Docker environment...${NC}"
 "$TOOLKIT_ROOT/bin/UBR_open-docker"
 "$TOOLKIT_ROOT/bin/start"
 
+echo -e "${YELLOW}[INFO] Setting TeX Live repository and updating tlmgr...${NC}"
 # updates texlive
 $DOCKER_BIN exec sharelatex tlmgr option repository https://ftp.math.utah.edu/pub/tex/historic/systems/texlive/2024/tlnet-final/
 $DOCKER_BIN exec sharelatex tlmgr update --self
@@ -19,20 +34,24 @@ failed_packages=()
 
 # goes through list of arguments where each one is a latex package
 while IFS= read -r line; do
-    result=$(exec $DOCKER_BIN  exec sharelatex tlmgr install "$line" 2>&1)
+    pkg="$line"
+    echo -e "${YELLOW}[INFO] Installing package:${NC} $pkg"
+    result=$(exec $DOCKER_BIN exec sharelatex tlmgr install "$pkg" 2>&1)
 
     if echo "$result" | grep -q "not present in repository"; then
-        failed_packages+=("$line")
+        echo -e "${RED}[WARNING] $pkg not present in repository${NC}"
+        failed_packages+=("$pkg")
     else
-        echo "$line installed"
+        echo -e "${GREEN}[SUCCESS] $pkg installed${NC}"
     fi
 done < "$TOOLKIT_ROOT/bin/packages.txt"
 
 if [ ${#failed_packages[@]} -gt 0 ]; then
-    echo "The following packages do not exist and failed to install:"
+    echo -e "${RED}The following packages could not be installed:${NC}"
     for item in "${failed_packages[@]}"; do
-        echo "$item"
+        echo -e "${RED}- $item${NC}"
     done
+    exit 1
 else
-    echo "All packages were successfully installed"
+    echo -e "${GREEN}All packages were successfully installed.${NC}"
 fi

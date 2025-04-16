@@ -1,24 +1,83 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
+
+set -e
 
 OS="$(uname -s)"
+DOCKER_BIN=""
 
-if [[ "$OS" == "Darwin" ]]; then
-    # macOS
-    DOCKER_BIN=$(which docker)
-    open -a Docker
-elif [[ "$OS" == "MINGW64_NT"* || "$OS" == "MSYS_NT"* || "$OS" == "CYGWIN_NT"* ]]; then
-    # Windows (Git Bash / Cygwin)
-    DOCKER_BIN=$(where docker | head -n 1)
-    start "" "C:\Program Files\Docker\Docker\Docker Desktop.exe"
-else
-    echo "Unsupported OS"
+start_docker_desktop_mac() {
+    echo "Starting Docker Desktop on macOS..."
+    open -a Docker || {
+        echo "Failed to launch Docker Desktop on macOS"
+        exit 1
+    }
+}
+
+start_docker_desktop_win() {
+    echo "Starting Docker Desktop on Windows..."
+
+    # Try common paths (can add more as needed)
+    local candidate_paths=(
+        "/c/Program Files/Docker/Docker/Docker Desktop.exe"
+        "/c/Program Files (x86)/Docker/Docker/Docker Desktop.exe"
+    )
+
+    for path in "${candidate_paths[@]}"; do
+        if [[ -f "$path" ]]; then
+            nohup "$path" >/dev/null 2>&1 &
+            return
+        fi
+    done
+
+    echo "Could not find Docker Desktop. Please start it manually."
     exit 1
+}
+
+# OS detection and handling
+case "$OS" in
+    Darwin)
+        DOCKER_BIN=$(command -v docker)
+        start_docker_desktop_mac
+        ;;
+    MINGW64_NT*|MSYS_NT*|CYGWIN_NT*)
+        DOCKER_BIN=$(command -v docker || where docker | head -n 1)
+        start_docker_desktop_win
+        ;;
+    Linux)
+        if grep -qi microsoft /proc/version; then
+            echo "Detected WSL. Please ensure Docker Desktop is running with WSL integration."
+            DOCKER_BIN=$(command -v docker)
+        else
+            echo "Linux is not currently supported by this script."
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Unsupported OS: $OS"
+        exit 1
+        ;;
+esac
+
+
+# Check if Docker is already running
+if "$DOCKER_BIN" system info &>/dev/null; then
+    echo "Docker is already running."
+    exit 0
 fi
 
+
 # Wait for Docker to be ready
-while ! $DOCKER_BIN system info &>/dev/null; do
+echo "Waiting for Docker to become available..."
+TRIES=0
+MAX_TRIES=180
+
+until "$DOCKER_BIN" system info &>/dev/null; do
     sleep 1
+    TRIES=$((TRIES+1))
+    if [[ $TRIES -ge $MAX_TRIES ]]; then
+        echo "Docker did not become ready in time (180 seconds). Please try again."
+        exit 1
+    fi
 done
 
 echo "Docker is ready!"
-exit 0
