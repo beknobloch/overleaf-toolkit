@@ -1,3 +1,17 @@
+# [1.3.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.10...v1.3.0) (2025-04-16)
+
+
+### Bug Fixes
+
+* **opening Docker:** refactored UBR_open-docker and added a maximum amount of time that Underbranch will wait for Docker to become available before failing (3 min) ([55fd46c](https://github.com/beknobloch/overleaf-toolkit/commit/55fd46c9a945e0b4b0a48b68a09d32d18b657274))
+* **packages:** added check for docker installation in UBR_install-package ([9c75e4a](https://github.com/beknobloch/overleaf-toolkit/commit/9c75e4a47053ad4ddd71559412eff62853390c7a))
+* **verifying port:** added maximum waiting time for the port to be verified before failing ([de9464f](https://github.com/beknobloch/overleaf-toolkit/commit/de9464f195a4e59da46821cb61c0bff5302ffdf6))
+
+
+### Features
+
+* **packages:** added UBR_install-package-wrapper to add support for installing packages on Windows using WSL ([76c839e](https://github.com/beknobloch/overleaf-toolkit/commit/76c839e292ce9d7a3a67222e4bb8d775b6bf99df))
+
 ## [1.2.10](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.9...v1.2.10) (2025-04-16)
 
 
