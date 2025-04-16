@@ -41,83 +41,81 @@ if (process.platform === "darwin") {
   process.exit(1);
 }
 
-function enablePermissions(){
-  return new Promise((resolve, reject) => {
-    exec(`chmod +x ${upScriptPath}`)
-    exec(`chmod +x ${stopScriptPath}`)
-    exec(`chmod +x ${verifyPortScriptPath}`)
-    exec(`chmod +x ${openDockerScriptPath}`)
-    exec(`chmod +x ${startScriptPath}`)
-    exec(`chmod +x ${composeScriptPath}`)
-    resolve(true)
-  });
-}
-function verifyPortReady(){
-  return new Promise((resolve, reject) => {
-    exec(`${bashCommand} ${verifyPortScriptPath}`, (error, stdout, stderr) => {
+try {
+  const shellPath = require('child_process').execSync(
+    `${process.env.SHELL} -ilc 'echo $PATH'`
+  ).toString().trim();
 
-      if (error) {
-        console.error(`Error: ${error.message}`);
-        reject(error);
-      }
-      if (stderr) {
-        console.error(`Stderr: ${stderr}`);
-      }
-      resolve(true);
-    });
-  });
+  process.env.PATH = shellPath;
+  console.log('Updated PATH from shell:', process.env.PATH);
+} catch (e) {
+  console.warn("Failed to sync PATH from shell:", e.message);
 }
-function openDocker(){
-  return new Promise((resolve, reject) => {
-    exec(`${bashCommand} ${openDockerScriptPath}`, (error, stdout, stderr) => {
 
-      resolve(true);
-    });
-  });
-}
-// Start Docker containers using the start script, returning a promise
-function startDockerContainers() {
+// Function to execute shell commands and return a promise
+function execCommand(command, options = {}) {
   return new Promise((resolve, reject) => {
-    exec(`${bashCommand} ${upScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
+    exec(command, options, (error, stdout, stderr) => {
       if (error) {
-        console.error(`Error starting containers: ${error.message}`);
+        console.error(`Command failed: ${command}\n${error.message}`);
         reject(error);
       } else {
-        console.log("Containers started:", stdout);
-        resolve(true);
+        if (stderr) console.warn(`stderr: ${stderr}`);
+        resolve(stdout);
       }
     });
   });
+}
+
+// Function to enable permissions for the scripts
+function enablePermissions(){
+  const scripts = [
+    upScriptPath,
+    stopScriptPath,
+    startScriptPath,
+    verifyPortScriptPath,
+    openDockerScriptPath,
+    composeScriptPath
+  ];
+
+  return Promise.all(
+    scripts.map(script => new Promise((resolve, reject) => {
+      exec('chmod +x ' + script, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error setting permissions for ${script}: ${error.message}`);
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    }))
+  );
+}
+
+// Verify if the port is ready using the verify script, returning a promise
+function verifyPortReady(){
+  return execCommand(`${bashCommand} ${verifyPortScriptPath}`, { env: { PATH: process.env.PATH } }).then(() => true);
+}
+
+// Start Docker containers using the start script, returning a promise
+function startDockerContainers() {
+  return execCommand(`${bashCommand} ${upScriptPath}`, { env: { PATH: process.env.PATH } });
 }
 
 // Stop Docker containers using the stop script
 function stopDockerContainers() {
-  return new Promise((resolve, reject) => {
-    exec(`${bashCommand} ${stopScriptPath}`, { env: { PATH: '/usr/local/bin:/usr/bin:/bin' } }, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error stopping containers: ${error.message}`);
-        reject(error);
-      } else {
-        console.log("Containers stopped:", stdout);
-        resolve(true);
-      }
-    });
-  });
+  return execCommand(`${bashCommand} ${stopScriptPath}`, { env: { PATH: process.env.PATH } });
 }
 
+// Check that docker is installed and available
 function checkDockerInstalled() {
-  return new Promise((resolve, reject) => {
-    const command = process.platform === "win32" ? "docker -v" : "/usr/local/bin/docker -v";
-
-    exec(command, (error, stdout) => {
-      if (error) {
-        console.error("Docker is not installed or not accessible.");
-        reject("Docker is not installed or not accessible.");
-      } else {
-        console.log("Docker is available:", stdout);
-        resolve(true);
-      }
-    });
+  const command = process.platform === "win32" ? "docker -v" : "/usr/local/bin/docker -v";
+  return execCommand(command).then(stdout => {
+    console.log("Docker is available:", stdout);
+    return true;
+  }).catch(() => {
+    console.error("Docker is not installed or not accessible.");
+    throw new Error("Docker is not installed or not accessible.");
   });
 }
 
@@ -130,9 +128,9 @@ function createWindow() {
       icon: path.join(__dirname, 'assets', 'icon.png'),
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
-        nodeIntegration: true,
-        contextIsolation: false,
-      },
+        contextIsolation: true,
+        nodeIntegration: false,
+  },
     });
 
     mainWindow.loadURL('http://localhost:8080/launchpad');
@@ -174,7 +172,7 @@ app.on('ready', async () => {
     
     }catch(e){
       dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
-      console.log('error')
+      console.error('Startup sequence failed:', e);
       app.quit()
     }
     
@@ -184,7 +182,7 @@ app.on('ready', async () => {
     }
     catch(err){
       dialog.showErrorBox("Startup Error", `There was an issue: ${err}`);
-      console.log('error')
+      console.error('Startup sequence failed:', e);
       app.quit();
     };
 });
@@ -196,13 +194,20 @@ app.on('window-all-closed', async () => {
   }
 });
 
-ipcMain.on('start-containers', () => {
-  startDockerContainers().then(() => {
-    mainWindow.webContents.send('docker-status', 'running');
-  });
+ipcMain.handle('start-containers', async () => {
+  try {
+    await startDockerContainers();
+    return { status: 'success' };
+  } catch (err) {
+    return { status: 'error', message: err.message || err };
+  }
 });
 
-ipcMain.on('stop-containers', () => {
-  stopDockerContainers();
-  mainWindow.webContents.send('docker-status', 'stopped');
+ipcMain.handle('stop-containers', async () => {
+  try {
+    await stopDockerContainers();
+    return { status: 'success' };
+  } catch (err) {
+    return { status: 'error', message: err.message || err };
+  }
 });
