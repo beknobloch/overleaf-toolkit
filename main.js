@@ -41,15 +41,16 @@ if (process.platform === "darwin") {
   process.exit(1);
 }
 
-try {
-  const shellPath = require('child_process').execSync(
-    `${process.env.SHELL} -ilc 'echo $PATH'`
-  ).toString().trim();
-
-  process.env.PATH = shellPath;
-  console.log('Updated PATH from shell:', process.env.PATH);
-} catch (e) {
-  console.warn("Failed to sync PATH from shell:", e.message);
+if (process.platform !== 'win32') {
+  try {
+    const shellPath = require('child_process')
+      .execSync(`${process.env.SHELL} -ilc 'echo $PATH'`)
+      .toString().trim();
+    process.env.PATH = shellPath;
+    console.log('Updated PATH from shell:', process.env.PATH);
+  } catch (e) {
+    console.warn("Failed to sync PATH from shell:", e.message);
+  }
 }
 
 // Function to execute shell commands and return a promise
@@ -109,7 +110,7 @@ function stopDockerContainers() {
 
 // Check that docker is installed and available
 function checkDockerInstalled() {
-  const command = process.platform === "win32" ? "docker -v" : "/usr/local/bin/docker -v";
+  const command = "docker -v";
   return execCommand(command).then(stdout => {
     console.log("Docker is available:", stdout);
     return true;
@@ -158,19 +159,14 @@ app.on('ready', async () => {
   console.log('attempting scripts')
   try{
     await enablePermissions()
-    //dialog.showErrorBox("Startup Error", `1`);
-    await checkDockerInstalled()
-    //dialog.showErrorBox("Startup Error", `2`);
-    console.log('docker exists')
-    await startDockerContainers()
-    //dialog.showErrorBox("Startup Error", `3`);
 
+    await checkDockerInstalled()
+
+    await startDockerContainers()
+    
     await verifyPortReady()
-    console.log('port 80 is open and ready for use')
-    //dialog.showErrorBox("Startup Error", `4`);
-    
-    
-    }catch(e){
+    console.log('port 80 is open and ready for use')    
+    } catch(e) {
       dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
       console.error('Startup sequence failed:', e);
       app.quit()
