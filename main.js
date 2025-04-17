@@ -112,6 +112,35 @@ function checkDockerInstalled() {
 }
 
 // Create the Electron browser window and load the URL only after Docker containers are started
+
+let loadingWindow;
+
+function createLoadingWindow() {
+  loadingWindow = new BrowserWindow({
+    width: 500,
+    height: 400,
+    resizable: false,
+    movable: true,
+    frame: false,
+    transparent: false,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: true,
+    },
+  });
+
+  loadingWindow.loadFile(path.join(__dirname, 'src', 'loading.html'));
+  loadingWindow.once('ready-to-show', () => loadingWindow.show());
+}
+
+function sendLog(msg) {
+  if (loadingWindow && loadingWindow.webContents) {
+    loadingWindow.webContents.send('log-message', msg);
+  }
+  console.log(msg);
+}
 function createWindow() {
   try {
     mainWindow = new BrowserWindow({
@@ -163,31 +192,30 @@ if (process.platform !== 'win32') {
 
 // Electron app events
 app.on('ready', async () => {
-  console.log('attempting scripts')
-  try{
-    await enablePermissions()
+  createLoadingWindow(); // Show the loading screen first
+  sendLog("Starting Underbranch...");
 
-    await checkDockerInstalled()
+  try {
+    sendLog("Setting script permissions...");
+    await enablePermissions();
 
-    await startDockerContainers(bashCommand)
-    
-    await verifyPortReady(bashCommand)
-    console.log('port 80 is open and ready for use')    
-    } catch(e) {
-      dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
-      console.error('Startup sequence failed:', e);
-      app.quit()
-    }
-    
-    try {
-      createWindow(); // Create the window only after Docker containers are started
-      console.log('window opened')
-    }
-    catch(err){
-      dialog.showErrorBox("Startup Error", `There was an issue: ${err}`);
-      console.error('Startup sequence failed:', e);
-      app.quit();
-    };
+    sendLog("Checking Docker installation...");
+    await checkDockerInstalled();
+
+    sendLog("Starting Docker containers...");
+    await startDockerContainers(bashCommand);
+
+    sendLog("Verifying port availability...");
+    await verifyPortReady(bashCommand);
+
+    sendLog("All systems go. Launching main window...");
+    createWindow(); // Load the actual app
+    loadingWindow.close(); // Dismiss loading screen
+  } catch (e) {
+    dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
+    sendLog(`Startup failed: ${e}`);
+    app.quit();
+  }
 });
 
 app.on('window-all-closed', async () => {

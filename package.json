@@ -31,6 +31,7 @@
       "bin/**/*",
       "data/**/*",
       "config/**/*",
+      "src/**/*",
       "!dist",
       "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/*.map"
@@ -38,7 +39,8 @@
     "asarUnpack": [
       "bin/**",
       "lib/**",
-      "data/**"
+      "data/**",
+      "src/**"
     ],
     "mac": {
       "target": "dmg",

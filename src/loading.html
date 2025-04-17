@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Starting Underbranch...</title>
+    <style>
+      body { font-family: sans-serif; background: #1e1e1e; color: white; padding: 20px; }
+      #log { white-space: pre-wrap; font-family: monospace; }
+    </style>
+  </head>
+  <body>
+    <img src="./assets/logo.png" alt="Underbranch Logo" width="300" style="display: block; margin: 0 auto 20px;" />
+    <h2>Launching Underbranch...</h2>
+    <div id="log">Initializing...</div>
+    <script>
+      window.electronAPI.onLogMessage((event, message) => {
+        const logDiv = document.getElementById('log');
+        logDiv.textContent += `\n${message}`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+      });
+    </script>
+  </body>
+</html>
