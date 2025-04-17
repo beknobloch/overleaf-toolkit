@@ -109,6 +109,7 @@ function checkDockerInstalled() {
 // Create the Electron browser window and load the URL only after Docker containers are started
 
 let loadingWindow;
+let closingWindow;
 
 function createLoadingWindow() {
   loadingWindow = new BrowserWindow({
@@ -128,6 +129,26 @@ function createLoadingWindow() {
 
   loadingWindow.loadFile(path.join(__dirname, 'src', 'loading.html'));
   loadingWindow.once('ready-to-show', () => loadingWindow.show());
+}
+
+function createClosingWindow() {
+  closingWindow = new BrowserWindow({
+    width: 500,
+    height: 200,
+    resizable: false,
+    movable: true,
+    frame: false,
+    transparent: false,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: true,
+    },
+  });
+
+  closingWindow.loadFile(path.join(__dirname, 'src', 'closing.html'));
+  closingWindow.once('ready-to-show', () => closingWindow.show());
 }
 
 function sendLog(msg) {
@@ -187,7 +208,7 @@ if (process.platform !== 'win32') {
 
 // Electron app events
 app.on('ready', async () => {
-  createLoadingWindow(); // Show the loading screen first
+  createLoadingWindow();
   sendLog("Starting Underbranch...");
 
   try {
@@ -204,8 +225,8 @@ app.on('ready', async () => {
     await verifyPortReady(bashCommand);
 
     sendLog("All systems go. Launching main window...");
-    createWindow(); // Load the actual app
-    loadingWindow.close(); // Dismiss loading screen
+    createWindow();
+    loadingWindow.close();
   } catch (e) {
     dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
     sendLog(`Startup failed: ${e}`);
@@ -213,10 +234,18 @@ app.on('ready', async () => {
   }
 });
 
-app.on('window-all-closed', async () => {
-  if (process.platform !== 'darwin') {
+let isQuitting = false;
+app.on('before-quit', async (event) => {
+  if (isQuitting) return;
+  isQuitting = true;
+  event.preventDefault();
+  createClosingWindow();
+  try {
     await stopDockerContainers(bashCommand);
-    app.quit();
+  } catch (err) {
+    console.warn("Failed to stop Docker containers:", err);
+  } finally {
+    app.exit();
   }
 });
 
