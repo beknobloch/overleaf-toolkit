@@ -1,3 +1,11 @@
+## [1.3.1](https://github.com/beknobloch/overleaf-toolkit/compare/v1.3.0...v1.3.1) (2025-04-17)
+
+
+### Bug Fixes
+
+* **docker compose:** added proper quoting to DOCKER_BIN variable to prevent path issue ([417bf1b](https://github.com/beknobloch/overleaf-toolkit/commit/417bf1b4fa99498e6f650aed61d1dd952f508117))
+* **updating TexLive:** fixed a syntax mistake with the cp command ([79b3227](https://github.com/beknobloch/overleaf-toolkit/commit/79b322718472db7a98e6b955a20413e1ddbdaa12))
+
 # [1.3.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.2.10...v1.3.0) (2025-04-16)
 
 
