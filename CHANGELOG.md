@@ -1,3 +1,15 @@
+# [1.4.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.3.1...v1.4.0) (2025-04-17)
+
+
+### Bug Fixes
+
+* **package.json:** remove duplicate reference to /src ([6ef4cbf](https://github.com/beknobloch/overleaf-toolkit/commit/6ef4cbf94a47ccaea37462d0677a9ae90894127d))
+
+
+### Features
+
+* **UX:** added loading window with status logs for better transparency on startup ([1e0ac17](https://github.com/beknobloch/overleaf-toolkit/commit/1e0ac17b9f5d5cd270eb3e3337f2fdc92fcdaba1))
+
 ## [1.3.1](https://github.com/beknobloch/overleaf-toolkit/compare/v1.3.0...v1.3.1) (2025-04-17)
 
 
