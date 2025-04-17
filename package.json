@@ -39,8 +39,7 @@
     "asarUnpack": [
       "bin/**",
       "lib/**",
-      "data/**",
-      "src/**"
+      "data/**"
     ],
     "mac": {
       "target": "dmg",
