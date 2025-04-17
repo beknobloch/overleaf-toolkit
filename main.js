@@ -21,35 +21,26 @@ const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-comp
 // const openDockerScriptPath = path.join(__dirname, 'bin/UBR_open-docker');
 // const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
 
-let bashCommand = `bash`;
-if (process.platform === "darwin") {
+// Function to get the appropriate bash command based on the OS
+function getBashCommand() {
+  if (process.platform === "darwin") {
+    return "bash";
+  } else if (process.platform === "win32") {
+    const gitBashPaths = [
+      "C:\\Program Files\\Git\\bin\\bash.exe",
+      "C:\\Program Files (x86)\\Git\\bin\\bash.exe"
+    ];
 
-} else if (process.platform === "win32") {
-  const gitBashPaths = [
-    "C:\\Program Files\\Git\\bin\\bash.exe",
-    "C:\\Program Files (x86)\\Git\\bin\\bash.exe"
-  ];
-
-  bashCommand = gitBashPaths.find(fs.existsSync);
-  if (!bashCommand) {
-    console.error("Git Bash not found! Please install Git for Windows from https://gitforwindows.org/");
-    require("electron").shell.openExternal("https://gitforwindows.org/");
+    const bashCommand = gitBashPaths.find(fs.existsSync);
+    if (!bashCommand) {
+      console.error("Git Bash not found! Please install Git for Windows from https://gitforwindows.org/");
+      require("electron").shell.openExternal("https://gitforwindows.org/");
+      process.exit(1);
+    }
+    return bashCommand;
+  } else {
+    console.error("Unsupported OS");
     process.exit(1);
-  }
-} else {
-  console.error("Unsupported OS");
-  process.exit(1);
-}
-
-if (process.platform !== 'win32') {
-  try {
-    const shellPath = require('child_process')
-      .execSync(`${process.env.SHELL} -ilc 'echo $PATH'`)
-      .toString().trim();
-    process.env.PATH = shellPath;
-    console.log('Updated PATH from shell:', process.env.PATH);
-  } catch (e) {
-    console.warn("Failed to sync PATH from shell:", e.message);
   }
 }
 
@@ -94,17 +85,17 @@ function enablePermissions(){
 }
 
 // Verify if the port is ready using the verify script, returning a promise
-function verifyPortReady(){
+function verifyPortReady(bashCommand){
   return execCommand(`${bashCommand} ${verifyPortScriptPath}`, { env: { PATH: process.env.PATH } }).then(() => true);
 }
 
 // Start Docker containers using the start script, returning a promise
-function startDockerContainers() {
+function startDockerContainers(bashCommand) {
   return execCommand(`${bashCommand} ${upScriptPath}`, { env: { PATH: process.env.PATH } });
 }
 
 // Stop Docker containers using the stop script
-function stopDockerContainers() {
+function stopDockerContainers(bashCommand) {
   return execCommand(`${bashCommand} ${stopScriptPath}`, { env: { PATH: process.env.PATH } });
 }
 
@@ -154,6 +145,22 @@ function createWindow() {
   }
 }
 
+const bashCommand = getBashCommand();
+console.log("Using bash command:", bashCommand);
+
+// Set PATH for non-Windows platforms
+if (process.platform !== 'win32') {
+  try {
+    const shellPath = require('child_process')
+      .execSync(`${process.env.SHELL} -ilc 'echo $PATH'`)
+      .toString().trim();
+    process.env.PATH = shellPath;
+    console.log('Updated PATH from shell:', process.env.PATH);
+  } catch (e) {
+    console.warn("Failed to sync PATH from shell:", e.message);
+  }
+}
+
 // Electron app events
 app.on('ready', async () => {
   console.log('attempting scripts')
@@ -162,9 +169,9 @@ app.on('ready', async () => {
 
     await checkDockerInstalled()
 
-    await startDockerContainers()
+    await startDockerContainers(bashCommand)
     
-    await verifyPortReady()
+    await verifyPortReady(bashCommand)
     console.log('port 80 is open and ready for use')    
     } catch(e) {
       dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
@@ -185,14 +192,14 @@ app.on('ready', async () => {
 
 app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
-    await stopDockerContainers();
+    await stopDockerContainers(bashCommand);
     app.quit();
   }
 });
 
 ipcMain.handle('start-containers', async () => {
   try {
-    await startDockerContainers();
+    await startDockerContainers(bashCommand);
     return { status: 'success' };
   } catch (err) {
     return { status: 'error', message: err.message || err };
@@ -201,7 +208,7 @@ ipcMain.handle('start-containers', async () => {
 
 ipcMain.handle('stop-containers', async () => {
   try {
-    await stopDockerContainers();
+    await stopDockerContainers(bashCommand);
     return { status: 'success' };
   } catch (err) {
     return { status: 'error', message: err.message || err };

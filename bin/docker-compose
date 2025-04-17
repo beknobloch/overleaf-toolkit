@@ -236,9 +236,9 @@ function docker_compose() {
   fi
 
    #exec $DOCKER_BIN-compose "${flags[@]}"
-  if $DOCKER_BIN compose version >/dev/null 2>&1; then
+  if "$DOCKER_BIN" compose version >/dev/null 2>&1; then
     # Docker compose v2 is available
-    exec $DOCKER_BIN compose "${flags[@]}"
+    exec "$DOCKER_BIN" compose "${flags[@]}"
   elif command -v docker-compose >/dev/null; then
     # Fall back to docker-compose v1
     if [[ ${SKIP_WARNINGS:-null} != "true" ]]; then
