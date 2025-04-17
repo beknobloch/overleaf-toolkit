@@ -23,21 +23,16 @@ const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-comp
 
 // Function to get the appropriate bash command based on the OS
 function getBashCommand() {
-  if (process.platform === "darwin") {
-    return "bash";
-  } else if (process.platform === "win32") {
-    const gitBashPaths = [
-      "C:\\Program Files\\Git\\bin\\bash.exe",
-      "C:\\Program Files (x86)\\Git\\bin\\bash.exe"
-    ];
-
-    const bashCommand = gitBashPaths.find(fs.existsSync);
-    if (!bashCommand) {
-      console.error("Git Bash not found! Please install Git for Windows from https://gitforwindows.org/");
+  if (process.platform === "win32") {
+    const gitBashPath = "C:\\Program Files\\Git\\bin\\bash.exe";
+    if (!fs.existsSync(gitBashPath)) {
+      console.error("Git Bash not found at expected path.");
       require("electron").shell.openExternal("https://gitforwindows.org/");
       process.exit(1);
     }
-    return bashCommand;
+    return `"${gitBashPath}" --login -i -c`;
+  } else if (process.platform === "darwin" || process.platform === "linux") {
+    return "bash -c";
   } else {
     console.error("Unsupported OS");
     process.exit(1);
