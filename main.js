@@ -110,6 +110,7 @@ function checkDockerInstalled() {
 
 let loadingWindow;
 let closingWindow;
+let sharehelpWindow;
 
 function createLoadingWindow() {
   loadingWindow = new BrowserWindow({
@@ -131,10 +132,17 @@ function createLoadingWindow() {
   loadingWindow.once('ready-to-show', () => loadingWindow.show());
 }
 
+function sendLog(msg) {
+  if (loadingWindow && loadingWindow.webContents) {
+    loadingWindow.webContents.send('log-message', msg);
+  }
+  console.log(msg);
+}
+
 function createClosingWindow() {
   closingWindow = new BrowserWindow({
     width: 500,
-    height: 200,
+    height: 165,
     resizable: false,
     movable: true,
     frame: false,
@@ -151,12 +159,34 @@ function createClosingWindow() {
   closingWindow.once('ready-to-show', () => closingWindow.show());
 }
 
-function sendLog(msg) {
-  if (loadingWindow && loadingWindow.webContents) {
-    loadingWindow.webContents.send('log-message', msg);
-  }
-  console.log(msg);
+async function createSharehelpWindow() {
+  sharehelpWindow = new BrowserWindow({
+    width: 500,
+    height: 360,
+    resizable: false,
+    movable: true,
+    frame: true,
+    transparent: false,
+    show: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: true,
+    },
+  });
+
+  sharehelpWindow.loadFile(path.join(__dirname, 'src', 'sharehelp.html'));
+  sharehelpWindow.once('ready-to-show', async () => {
+    sharehelpWindow.show();
+    try {
+      const ip = await execCommand(`ipconfig getifaddr en0`);
+      sharehelpWindow.webContents.send('share-ip-message', ip.trim());
+    } catch (err) {
+      console.error("Failed to get IP address:", err);
+    }
+  });
 }
+
 function createWindow() {
   try {
     mainWindow = new BrowserWindow({
@@ -226,6 +256,7 @@ app.on('ready', async () => {
 
     sendLog("All systems go. Launching main window...");
     createWindow();
+    createSharehelpWindow();
     loadingWindow.close();
   } catch (e) {
     dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
