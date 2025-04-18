@@ -4,21 +4,53 @@
     <meta charset="UTF-8" />
     <title>Getting Started With Sharing</title>
     <style>
-      body { font-family: sans-serif; background: #1e1e1e; color: white; padding: 20px; }
-      #share-content { white-space: pre-wrap; font-family: monospace; font-size: 30px; }
-      p { white-space: pre-wrap; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; }
+      body {
+        font-family: sans-serif;
+        background: #1e1e1e;
+        color: white;
+        padding: 30px 20px 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      #share-content {
+        background: #2a2a2a;
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-family: monospace;
+        font-size: 24px;
+        margin: 16px 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        border: 1px solid #3a3a3a;
+      }
+      p {
+        white-space: pre-wrap;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
     <h2>How Others Can Join Your Project</h2>
     <p>To allow others to join your project, you need to share your IP address. This is the address that they will use to connect to your local server:</p>
     <div id="share-content"></div>
+    <button onclick="copyIP()">Copy IP</button>
     <p>Replace <span style="font-family: monospace;">localhost</span> with this address in the default sharelink.</p>
     <script>
-        window.electronAPI.onShareIP((ip) => {
-          const ipDiv = document.getElementById('share-content');
-          ipDiv.textContent = ip;
-        });
-      </script>
+      window.electronAPI.onShareIP((ip) => {
+        const ipDiv = document.getElementById('share-content');
+        ipDiv.textContent = ip || 'IP address not found.';
+      });
+
+      function copyIP() {
+        const ip = document.getElementById('share-content').textContent;
+        navigator.clipboard.writeText(ip).then(() => alert('IP copied!'));
+      }
+    </script>
   </body>
 </html>

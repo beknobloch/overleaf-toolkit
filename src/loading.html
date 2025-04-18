@@ -4,18 +4,31 @@
     <meta charset="UTF-8" />
     <title>Starting Underbranch...</title>
     <style>
-      body { font-family: sans-serif; background: #1e1e1e; color: white; padding: 20px; }
-      #log { white-space: pre-wrap; font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; }
+      body { font-family: sans-serif; background: #1e1e1e; color: white; padding: 20px;
+        text-align: center;
+        margin: 10px 0;
+      }
+      #log {
+        background: #2a2a2a;
+        padding: 12px 18px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 16px;
+        max-width: 80%;
+        margin: 20px auto;
+        overflow-y: auto;
+        max-height: 300px;
+      }
     </style>
   </head>
   <body>
     <img src="./assets/logo.png" alt="Underbranch Logo" width="300" style="display: block; margin: 0 auto 20px;" />
-    <h2>Launching Underbranch...</h2>
+    <h3>Launching Underbranch...</h3>
     <div id="log">Initializing...</div>
     <script>
       window.electronAPI.onLogMessage((event, message) => {
         const logDiv = document.getElementById('log');
-        logDiv.textContent += `\n${message}`;
+        logDiv.innerText += `\n${message}`;
         logDiv.scrollTop = logDiv.scrollHeight;
       });
     </script>

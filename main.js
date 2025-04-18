@@ -132,6 +132,7 @@ function createLoadingWindow() {
     frame: false,
     transparent: false,
     show: false,
+    center: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -152,13 +153,15 @@ function sendLog(msg) {
 
 function createClosingWindow() {
   closingWindow = new BrowserWindow({
-    width: 500,
-    height: 165,
+    width: 420,
+    height: 185,
     resizable: false,
     movable: true,
     frame: false,
     transparent: false,
     show: false,
+    center: true,
+    alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -173,12 +176,13 @@ function createClosingWindow() {
 async function createSharehelpWindow() {
   sharehelpWindow = new BrowserWindow({
     width: 500,
-    height: 360,
+    height: 450,
     resizable: false,
     movable: true,
     frame: true,
     transparent: false,
-    show: true,
+    show: false,
+    alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
