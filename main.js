@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require("fs");
 
 let mainWindow;
+let isQuitting = false; // Moved declaration here
 
 // Paths to shell scripts
 const upScriptPath = path.join(process.resourcesPath,'..', 'bin/up');
@@ -222,6 +223,27 @@ function createWindow() {
       dialog.showErrorBox("Load Error", `The web app could not be loaded: ${errorDescription}`);
     });
 
+    mainWindow.on('close', (event) => {
+      if (!isQuitting) {
+        event.preventDefault(); // Stop the window from closing
+
+        const choice = dialog.showMessageBoxSync(mainWindow, {
+          type: 'question',
+          buttons: ['Cancel', 'Quit'],
+          defaultId: 1,
+          cancelId: 0,
+          title: 'Confirm Quit',
+          message: 'Are you sure you want to quit Underbranch?',
+        });
+
+        if (choice === 1) {
+          isQuitting = true;
+          mainWindow.close();
+          app.quit();
+        }
+      }
+    });
+
     mainWindow.on('closed', () => {
       console.log("Window closed");
       mainWindow = null;
@@ -280,10 +302,7 @@ app.on('ready', async () => {
   }
 });
 
-let isQuitting = false;
 app.on('before-quit', async (event) => {
-  if (isQuitting) return;
-  isQuitting = true;
   event.preventDefault();
   createClosingWindow();
   try {
