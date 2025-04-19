@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require("fs");
 
 let mainWindow;
-let isQuitting = false; // Moved declaration here
+let isQuitting = false;
 
 // Paths to shell scripts
 const upScriptPath = path.join(process.resourcesPath,'..', 'bin/up');
@@ -15,40 +15,23 @@ const verifyPortScriptPath = path.join(process.resourcesPath,'..', 'bin/UBR_veri
 const openDockerScriptPath = path.join(process.resourcesPath,'..', 'bin/UBR_open-docker');
 const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-compose');
 
-// const upScriptPath = path.join(__dirname, 'bin/up');
-// const stopScriptPath = path.join(__dirname, 'bin/stop');
-// const startScriptPath = path.join(__dirname, 'bin/start');
-// const verifyPortScriptPath = path.join(__dirname, 'bin/UBR_verify-port');
-// const openDockerScriptPath = path.join(__dirname, 'bin/UBR_open-docker');
-// const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
-
 // Function to get the appropriate bash command based on the OS
 function getBashCommand() {
   if (process.platform === "win32") {
-    const gitBashPaths = [
-      "C:\\Program Files\\Git\\bin\\bash.exe",
-      "C:\\Program Files (x86)\\Git\\bin\\bash.exe"
-    ];
-
-    for (const bashPath of gitBashPaths) {
-      if (fs.existsSync(bashPath)) {
-        return `"${bashPath}" --login -i -c`;
-      }
-    }
-
-    const { dialog, shell } = require("electron");
-    dialog.showErrorBox(
-      "Git Bash Not Found",
-      "Git Bash could not be found in the expected locations.\n\nPlease install Git Bash from https://gitforwindows.org/ and try again."
-    );
-    shell.openExternal("https://gitforwindows.org/");
-    app.quit();
+    return "wsl bash -c";
   } else if (process.platform === "darwin") {
     return "bash -c";
   } else {
     console.error("Unsupported OS");
     process.exit(1);
   }
+}
+
+// Function to convert Windows path to WSL path
+function toWslPath(winPath) {
+  return winPath
+    .replace(/^([A-Za-z]):/, (_, drive) => `/mnt/${drive.toLowerCase()}`)
+    .replace(/\\/g, '/');
 }
 
 // Function to execute shell commands and return a promise
@@ -68,6 +51,8 @@ function execCommand(command, options = {}) {
 
 // Function to enable permissions for the scripts
 function enablePermissions(){
+  if (process.platform === 'win32') return Promise.resolve(); // No need to chmod in WSL
+
   const scripts = [
     upScriptPath,
     stopScriptPath,
@@ -93,17 +78,20 @@ function enablePermissions(){
 
 // Verify if the port is ready using the verify script, returning a promise
 function verifyPortReady(bashCommand){
-  return execCommand(`${bashCommand} ${verifyPortScriptPath}`, { env: { PATH: process.env.PATH } }).then(() => true);
+  const scriptPath = process.platform === 'win32' ? toWslPath(verifyPortScriptPath) : verifyPortScriptPath;
+  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } }).then(() => true);
 }
 
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers(bashCommand) {
-  return execCommand(`${bashCommand} ${upScriptPath}`, { env: { PATH: process.env.PATH } });
+  const scriptPath = process.platform === 'win32' ? toWslPath(upScriptPath) : upScriptPath;
+  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } });
 }
 
 // Stop Docker containers using the stop script
 function stopDockerContainers(bashCommand) {
-  return execCommand(`${bashCommand} ${stopScriptPath}`, { env: { PATH: process.env.PATH } });
+  const scriptPath = process.platform === 'win32' ? toWslPath(stopScriptPath) : stopScriptPath;
+  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } });
 }
 
 // Check that docker is installed and available
@@ -225,7 +213,7 @@ function createWindow() {
 
     mainWindow.on('close', (event) => {
       if (!isQuitting) {
-        event.preventDefault(); // Stop the window from closing
+        event.preventDefault();
 
         const choice = dialog.showMessageBoxSync(mainWindow, {
           type: 'question',
