@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/beknobloch/Underbranch/compare/v1.5.1...v1.5.2) (2025-05-01)
+
+
+### Bug Fixes
+
+* **release:** correctly upload and download artifacts for release for MacOS, Windows, and Linux ([35e2759](https://github.com/beknobloch/Underbranch/commit/35e27595bbb5afa21546a1a93b6138ceb0c73904))
+
 ## [1.5.1](https://github.com/beknobloch/Underbranch/compare/v1.5.0...v1.5.1) (2025-05-01)
 
 

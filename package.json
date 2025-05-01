@@ -1,6 +1,6 @@
 {
   "name": "docker-electron-app",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "author": "The Tater Tots",
   "description": "An Electron app that controls Docker containers using a shell script",
   "private": true,
