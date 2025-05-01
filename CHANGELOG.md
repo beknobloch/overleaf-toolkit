@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/beknobloch/Underbranch/compare/v1.5.0...v1.5.1) (2025-05-01)
+
+
+### Bug Fixes
+
+* **release:** add proper sequencing of OS releases and add Linux build support ([e1af46b](https://github.com/beknobloch/Underbranch/commit/e1af46b278ee9ea9f16fcb38fe7ac86bc0cbcd57))
+
 # [1.5.0](https://github.com/beknobloch/Underbranch/compare/v1.4.0...v1.5.0) (2025-05-01)
 
 
