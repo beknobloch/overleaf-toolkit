@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/beknobloch/Underbranch/compare/v1.5.2...v1.5.3) (2025-05-01)
+
+
+### Bug Fixes
+
+* add quotes around paths to prevent misinterpretations ([8577f4a](https://github.com/beknobloch/Underbranch/commit/8577f4af0af56e4fd10a0e7132e01aca9bab2ff7))
+
 ## [1.5.2](https://github.com/beknobloch/Underbranch/compare/v1.5.1...v1.5.2) (2025-05-01)
 
 
