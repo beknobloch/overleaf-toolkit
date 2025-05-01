@@ -1,3 +1,23 @@
+# [1.5.0](https://github.com/beknobloch/Underbranch/compare/v1.4.0...v1.5.0) (2025-05-01)
+
+
+### Bug Fixes
+
+* added dialog box catch if Git Bash cannot be found on Windows ([43c9ea9](https://github.com/beknobloch/Underbranch/commit/43c9ea986a33825940125a3551b8d9dd6d2b3236))
+* **data:** correctly create in-application data directories ([59e7fef](https://github.com/beknobloch/Underbranch/commit/59e7fefa05a5c80b7aa90e4a44b750d65dd29275))
+* **release:** make release attaches explicit to prevent incorrect launcher attachments ([ab4811b](https://github.com/beknobloch/Underbranch/commit/ab4811b2465fce530fa5175510ba0021e429bbff))
+* **release:** prevent publication on npm ([3d92106](https://github.com/beknobloch/Underbranch/commit/3d9210625f0404b92199c4bf55dd017c8a59e373))
+* **UX:** displays ip address with port number ([11e6b65](https://github.com/beknobloch/Underbranch/commit/11e6b65efe64053c5dbfeffcbd88badae6d1f390))
+* **windows:** replaced Git Bash with WSL ([461a6e9](https://github.com/beknobloch/Underbranch/commit/461a6e95ff6e4a55fc2daedaf59fbd31a1c1a570))
+* **windows:** runs git bash in correct environment ([560f354](https://github.com/beknobloch/Underbranch/commit/560f354e625b7a48c327b6404a7feeed91d8a2ac))
+
+
+### Features
+
+* **UX:** add quit confirmation dialog to main window ([8925f3b](https://github.com/beknobloch/Underbranch/commit/8925f3b50ef2331a58dbe0e9f7af49fbb3263713))
+* **UX:** added tip window with provided address to help users share projects ([7c307c4](https://github.com/beknobloch/Underbranch/commit/7c307c48792be77dff1fef3b36d834fd601f72d7))
+* **UX:** closing Underbranch now automatically stops running containers and informs the user with a pop-up window ([654acfd](https://github.com/beknobloch/Underbranch/commit/654acfdb4db6800602ef5371daaea5a331f024a1))
+
 # [1.4.0](https://github.com/beknobloch/overleaf-toolkit/compare/v1.3.1...v1.4.0) (2025-04-17)
 
 
