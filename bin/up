@@ -108,10 +108,16 @@ function create_data_directories() {
 
   DATA_ROOT="$HOME/.underbranch-data"
 
+  echo $DATA_ROOT
   mkdir -p "$DATA_ROOT/git-bridge"
   mkdir -p "$DATA_ROOT/mongo"
   mkdir -p "$DATA_ROOT/overleaf"
   mkdir -p "$DATA_ROOT/redis"
+
+  mkdir -p "$TOOLKIT_ROOT/data/git-bridge"
+  mkdir -p "$TOOLKIT_ROOT/data/mongo"
+  mkdir -p "$TOOLKIT_ROOT/data/overleaf"
+  mkdir -p "$TOOLKIT_ROOT/data/redis"
 
   export DATA_ROOT
 }

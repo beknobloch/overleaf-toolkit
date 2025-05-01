@@ -51,7 +51,7 @@ function execCommand(command, options = {}) {
 
 // Function to enable permissions for the scripts
 function enablePermissions(){
-  if (process.platform === 'win32') return Promise.resolve(); // No need to chmod in WSL
+  if (process.platform === 'win32') return Promise.resolve();
 
   const scripts = [
     upScriptPath,
