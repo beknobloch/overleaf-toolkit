@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Starting Underbranch...</title>
+    <title>Stopping Docker containers...</title>
     <style>
       body { font-family: sans-serif; background: #1e1e1e; color: white; padding: 20px;
         text-align: center;
@@ -22,15 +22,7 @@
     </style>
   </head>
   <body>
-    <img src="./assets/logo.png" alt="Underbranch Logo" width="300" style="display: block; margin: 0 auto 20px;" />
-    <h3>Launching Underbranch...</h3>
-    <div id="log">Initializing...</div>
-    <script>
-      window.electronAPI.onLogMessage((event, message) => {
-        const logDiv = document.getElementById('log');
-        logDiv.innerText += `\n${message}`;
-        logDiv.scrollTop = logDiv.scrollHeight;
-      });
-    </script>
+    <h3>Closing Underbranch...</h3>
+    <div id="log">Stopping Docker containers...</div>
   </body>
 </html>

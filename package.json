@@ -32,14 +32,9 @@
       "data/**/*",
       "config/**/*",
       "src/**/*",
-      "!dist",
+      "!dist/*",
       "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
       "!**/*.map"
-    ],
-    "asarUnpack": [
-      "bin/**",
-      "lib/**",
-      "data/**"
     ],
     "mac": {
       "target": "dmg",
@@ -49,7 +44,7 @@
         ".gitignore",
         "bin/**/*",
         "config/**/*",
-        "!dist",
+        "!dist/*",
         "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
         "!**/*.map"
       ],
@@ -106,5 +101,23 @@
       "installerHeader": "assets/installer-header.bmp",
       "installerSidebar": "assets/installer-sidebar.bmp"
     }
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git",
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            "dist/*.dmg",
+            "dist/*.exe"
+          ]
+        }
+      ]
+    ]
   }
 }

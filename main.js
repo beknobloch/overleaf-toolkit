@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require("fs");
 
 let mainWindow;
+let isQuitting = false;
 
 // Paths to shell scripts
 const upScriptPath = path.join(process.resourcesPath,'..', 'bin/up');
@@ -14,34 +15,23 @@ const verifyPortScriptPath = path.join(process.resourcesPath,'..', 'bin/UBR_veri
 const openDockerScriptPath = path.join(process.resourcesPath,'..', 'bin/UBR_open-docker');
 const composeScriptPath = path.join(process.resourcesPath,'..', 'bin/docker-compose');
 
-// const upScriptPath = path.join(__dirname, 'bin/up');
-// const stopScriptPath = path.join(__dirname, 'bin/stop');
-// const startScriptPath = path.join(__dirname, 'bin/start');
-// const verifyPortScriptPath = path.join(__dirname, 'bin/UBR_verify-port');
-// const openDockerScriptPath = path.join(__dirname, 'bin/UBR_open-docker');
-// const composeScriptPath = path.join(__dirname, 'bin/docker-compose');
-
 // Function to get the appropriate bash command based on the OS
 function getBashCommand() {
-  if (process.platform === "darwin") {
-    return "bash";
-  } else if (process.platform === "win32") {
-    const gitBashPaths = [
-      "C:\\Program Files\\Git\\bin\\bash.exe",
-      "C:\\Program Files (x86)\\Git\\bin\\bash.exe"
-    ];
-
-    const bashCommand = gitBashPaths.find(fs.existsSync);
-    if (!bashCommand) {
-      console.error("Git Bash not found! Please install Git for Windows from https://gitforwindows.org/");
-      require("electron").shell.openExternal("https://gitforwindows.org/");
-      process.exit(1);
-    }
-    return bashCommand;
+  if (process.platform === "win32") {
+    return "wsl bash -c";
+  } else if (process.platform === "darwin") {
+    return "bash -c";
   } else {
     console.error("Unsupported OS");
     process.exit(1);
   }
+}
+
+// Function to convert Windows path to WSL path
+function toWslPath(winPath) {
+  return winPath
+    .replace(/^([A-Za-z]):/, (_, drive) => `/mnt/${drive.toLowerCase()}`)
+    .replace(/\\/g, '/');
 }
 
 // Function to execute shell commands and return a promise
@@ -61,6 +51,8 @@ function execCommand(command, options = {}) {
 
 // Function to enable permissions for the scripts
 function enablePermissions(){
+  if (process.platform === 'win32') return Promise.resolve();
+
   const scripts = [
     upScriptPath,
     stopScriptPath,
@@ -86,17 +78,20 @@ function enablePermissions(){
 
 // Verify if the port is ready using the verify script, returning a promise
 function verifyPortReady(bashCommand){
-  return execCommand(`${bashCommand} ${verifyPortScriptPath}`, { env: { PATH: process.env.PATH } }).then(() => true);
+  const scriptPath = process.platform === 'win32' ? toWslPath(verifyPortScriptPath) : verifyPortScriptPath;
+  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } }).then(() => true);
 }
 
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers(bashCommand) {
-  return execCommand(`${bashCommand} ${upScriptPath}`, { env: { PATH: process.env.PATH } });
+  const scriptPath = process.platform === 'win32' ? toWslPath(upScriptPath) : upScriptPath;
+  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } });
 }
 
 // Stop Docker containers using the stop script
 function stopDockerContainers(bashCommand) {
-  return execCommand(`${bashCommand} ${stopScriptPath}`, { env: { PATH: process.env.PATH } });
+  const scriptPath = process.platform === 'win32' ? toWslPath(stopScriptPath) : stopScriptPath;
+  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } });
 }
 
 // Check that docker is installed and available
@@ -114,6 +109,8 @@ function checkDockerInstalled() {
 // Create the Electron browser window and load the URL only after Docker containers are started
 
 let loadingWindow;
+let closingWindow;
+let sharehelpWindow;
 
 function createLoadingWindow() {
   loadingWindow = new BrowserWindow({
@@ -124,6 +121,7 @@ function createLoadingWindow() {
     frame: false,
     transparent: false,
     show: false,
+    center: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -141,6 +139,58 @@ function sendLog(msg) {
   }
   console.log(msg);
 }
+
+function createClosingWindow() {
+  closingWindow = new BrowserWindow({
+    width: 420,
+    height: 185,
+    resizable: false,
+    movable: true,
+    frame: false,
+    transparent: false,
+    show: false,
+    center: true,
+    alwaysOnTop: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: true,
+    },
+  });
+
+  closingWindow.loadFile(path.join(__dirname, 'src', 'closing.html'));
+  closingWindow.once('ready-to-show', () => closingWindow.show());
+}
+
+async function createSharehelpWindow() {
+  sharehelpWindow = new BrowserWindow({
+    width: 500,
+    height: 450,
+    resizable: false,
+    movable: true,
+    frame: true,
+    transparent: false,
+    show: false,
+    alwaysOnTop: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: true,
+    },
+  });
+
+  sharehelpWindow.loadFile(path.join(__dirname, 'src', 'sharehelp.html'));
+  sharehelpWindow.once('ready-to-show', async () => {
+    sharehelpWindow.show();
+    try {
+      const ip = await execCommand(`ipconfig getifaddr en0`);
+      sharehelpWindow.webContents.send('share-ip-message', ip.trim());
+    } catch (err) {
+      console.error("Failed to get IP address:", err);
+    }
+  });
+}
+
 function createWindow() {
   try {
     mainWindow = new BrowserWindow({
@@ -159,6 +209,27 @@ function createWindow() {
     mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
       console.error(`Page failed to load: ${errorDescription} (Error Code: ${errorCode})`);
       dialog.showErrorBox("Load Error", `The web app could not be loaded: ${errorDescription}`);
+    });
+
+    mainWindow.on('close', (event) => {
+      if (!isQuitting) {
+        event.preventDefault();
+
+        const choice = dialog.showMessageBoxSync(mainWindow, {
+          type: 'question',
+          buttons: ['Cancel', 'Quit'],
+          defaultId: 1,
+          cancelId: 0,
+          title: 'Confirm Quit',
+          message: 'Are you sure you want to quit Underbranch?',
+        });
+
+        if (choice === 1) {
+          isQuitting = true;
+          mainWindow.close();
+          app.quit();
+        }
+      }
     });
 
     mainWindow.on('closed', () => {
@@ -192,7 +263,7 @@ if (process.platform !== 'win32') {
 
 // Electron app events
 app.on('ready', async () => {
-  createLoadingWindow(); // Show the loading screen first
+  createLoadingWindow();
   sendLog("Starting Underbranch...");
 
   try {
@@ -209,8 +280,9 @@ app.on('ready', async () => {
     await verifyPortReady(bashCommand);
 
     sendLog("All systems go. Launching main window...");
-    createWindow(); // Load the actual app
-    loadingWindow.close(); // Dismiss loading screen
+    createWindow();
+    createSharehelpWindow();
+    loadingWindow.close();
   } catch (e) {
     dialog.showErrorBox("Startup Error", `There was an issue: ${e}`);
     sendLog(`Startup failed: ${e}`);
@@ -218,10 +290,15 @@ app.on('ready', async () => {
   }
 });
 
-app.on('window-all-closed', async () => {
-  if (process.platform !== 'darwin') {
+app.on('before-quit', async (event) => {
+  event.preventDefault();
+  createClosingWindow();
+  try {
     await stopDockerContainers(bashCommand);
-    app.quit();
+  } catch (err) {
+    console.warn("Failed to stop Docker containers:", err);
+  } finally {
+    app.exit();
   }
 });
 
