@@ -3,6 +3,7 @@
   "version": "1.4.0",
   "author": "The Tater Tots",
   "description": "An Electron app that controls Docker containers using a shell script",
+  "private": true,
   "main": "main.js",
   "scripts": {
     "start": "electron .",
