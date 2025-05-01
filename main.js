@@ -79,19 +79,25 @@ function enablePermissions(){
 // Verify if the port is ready using the verify script, returning a promise
 function verifyPortReady(bashCommand){
   const scriptPath = process.platform === 'win32' ? toWslPath(verifyPortScriptPath) : verifyPortScriptPath;
-  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } }).then(() => true);
+  const quotedScriptPath = `"${scriptPath}"`;
+  const command = `${bashCommand} ${quotedScriptPath}`;
+  return execCommand(command, { env: { PATH: process.env.PATH } }).then(() => true);
 }
 
 // Start Docker containers using the start script, returning a promise
 function startDockerContainers(bashCommand) {
   const scriptPath = process.platform === 'win32' ? toWslPath(upScriptPath) : upScriptPath;
-  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } });
+  const quotedScriptPath = `"${scriptPath}"`;
+  const command = `${bashCommand} ${quotedScriptPath}`;
+  return execCommand(command, { env: { PATH: process.env.PATH } });
 }
 
 // Stop Docker containers using the stop script
 function stopDockerContainers(bashCommand) {
   const scriptPath = process.platform === 'win32' ? toWslPath(stopScriptPath) : stopScriptPath;
-  return execCommand(`${bashCommand} "${scriptPath}"`, { env: { PATH: process.env.PATH } });
+  const quotedScriptPath = `"${scriptPath}"`;
+  const command = `${bashCommand} ${quotedScriptPath}`;
+  return execCommand(command, { env: { PATH: process.env.PATH } });
 }
 
 // Check that docker is installed and available
