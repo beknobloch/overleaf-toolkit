@@ -44,7 +44,7 @@
     <script>
       window.electronAPI.onShareIP((ip) => {
         const ipDiv = document.getElementById('share-content');
-        ipDiv.textContent = ip || 'IP address not found.';
+        ipDiv.textContent = ip + ":8080" || 'IP address not found.';
       });
 
       function copyIP() {
