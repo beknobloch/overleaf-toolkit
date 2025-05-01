@@ -55,6 +55,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
 
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-build
+          path: dist/*.dmg
+
   release-windows:
     if: github.ref == 'refs/heads/master'
     runs-on: windows-latest
@@ -76,6 +82,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build -- --win --x64
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: win-build
+          path: dist/*.exe
 
   release-linux:
     if: github.ref == 'refs/heads/master'
@@ -99,6 +111,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build -- --linux
 
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: dist/*.AppImage
+
   semantic-release-final:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
@@ -116,6 +134,24 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-build
+          path: dist/
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: win-build
+          path: dist/
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-build
+          path: dist/
 
       - name: Run Semantic Release
         env:
